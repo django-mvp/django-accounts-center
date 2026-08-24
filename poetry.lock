@@ -535,7 +535,6 @@ files = [
     {file = "crispy-tailwind-1.0.3.tar.gz", hash = "sha256:2bc9f616d406e4b003f25d46fcb0079f1c2522719d97adb107667271d849459a"},
     {file = "crispy_tailwind-1.0.3-py3-none-any.whl", hash = "sha256:31427f66b1c4fd0d6fb040f4197cfb97d104cdbe7641ea2dea940c0057c4db4b"},
 ]
-markers = {main = "extra == \"allauth\""}
 
 [package.dependencies]
 django = ">=4.2"
@@ -707,14 +706,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-allauth"
-version = "65.19.0"
+version = "65.19.1"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "django_allauth-65.19.0-py3-none-any.whl", hash = "sha256:e37efea604d0bf40a6b16edd5b00e1560414e2c3ed07c2431b6e5bb058e2a771"},
-    {file = "django_allauth-65.19.0.tar.gz", hash = "sha256:9a615fd7f48f31985e1e3d886f8983e12d09e189f8d00d7a9750b3d300b7b366"},
+    {file = "django_allauth-65.19.1-py3-none-any.whl", hash = "sha256:5c507b53c45d2b7cbfcac7643d0123d5f0a7df7d43a882edcdbedb5f6b396421"},
+    {file = "django_allauth-65.19.1.tar.gz", hash = "sha256:999d01d5c422a82734cf5804df9f5a0d1d4ddd6acbb2f807db976ed7d49f9cb3"},
 ]
 markers = {main = "extra == \"allauth\""}
 
@@ -795,7 +794,6 @@ files = [
     {file = "django_crispy_forms-2.7-py3-none-any.whl", hash = "sha256:42a7ecb05ac3fd050d006dfe7aeceb7f318c30e5b5124ff619e2be252f36f096"},
     {file = "django_crispy_forms-2.7.tar.gz", hash = "sha256:4c59bed60417375cba26cebb2c67ab350b655934670270b1c89dbcd7e60f1b4c"},
 ]
-markers = {main = "extra == \"allauth\""}
 
 [package.dependencies]
 django = ">=5.2"
@@ -898,19 +896,21 @@ rich = ">=13"
 
 [[package]]
 name = "django-mvp"
-version = "0.16.1"
+version = "0.19.2"
 description = "MVP framework for Django - scaffold production-ready applications with sophisticated layouts and UI patterns designed for data-centric applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "django_mvp-0.16.1-py3-none-any.whl", hash = "sha256:7512cfe24e650b569603c9dc5c92cf2b7669972108a3e95c8ad011936eac8a2b"},
-    {file = "django_mvp-0.16.1.tar.gz", hash = "sha256:82fa71a6c075d731dc51706bb8129ae6691ff02b15c363d235c1ef5311ea37fe"},
+    {file = "django_mvp-0.19.2-py3-none-any.whl", hash = "sha256:e02fea6db7a185934496ec495a24129c32f3c167245d928ab5a65ec77309e77f"},
+    {file = "django_mvp-0.19.2.tar.gz", hash = "sha256:10a095b220a71af8ef17a9d3b2c137887497d1f276912442fbcf1b266e8c70d1"},
 ]
 
 [package.dependencies]
+crispy-tailwind = ">=1.0.3,<2.0"
 django = ">=5.2"
 django-cotton = "2.6.1"
+django-crispy-forms = ">=2.7,<3.0"
 django-easy-icons = ">=0.6"
 django-flex-menus = ">=0.4.3"
 mergedeep = ">=1.3,<2.0"
@@ -2196,14 +2196,14 @@ testing = ["covdefaults (>=2.3)", "coverage (>=7.13.4)", "pytest-mock (>=3.15.1)
 
 [[package]]
 name = "pytest-playwright"
-version = "0.8.0"
+version = "0.9.0"
 description = "A pytest wrapper with fixtures for Playwright to automate web browsers"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pytest_playwright-0.8.0-py3-none-any.whl", hash = "sha256:856aae6efd4bc055f2ef229c647768760bcaad5cd3a5983c314ac260a974a933"},
-    {file = "pytest_playwright-0.8.0.tar.gz", hash = "sha256:7888d4a2443160c82e0c506c437076679f86b36d1910427250d90fbf1843a981"},
+    {file = "pytest_playwright-0.9.0-py3-none-any.whl", hash = "sha256:9d9dc74e335c647944cecfffa706cc9e6e4bf4c25e84592c128b584d494d4471"},
+    {file = "pytest_playwright-0.9.0.tar.gz", hash = "sha256:bd44daa852b0fb8b0e55a2f88b727507dedda0e350bea5d09420647252f2454b"},
 ]
 
 [package.dependencies]
@@ -2253,14 +2253,14 @@ testing = ["covdefaults (>=2.3)", "coverage (>=7.5.4)", "pytest (>=8.3.5)", "pyt
 
 [[package]]
 name = "python-dotenv"
-version = "1.2.2"
+version = "1.2.3"
 description = "Read key-value pairs from a .env file and set them as environment variables"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "python_dotenv-1.2.2-py3-none-any.whl", hash = "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a"},
-    {file = "python_dotenv-1.2.2.tar.gz", hash = "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3"},
+    {file = "python_dotenv-1.2.3-py3-none-any.whl", hash = "sha256:904552145e8bfed22162c09dab1c2b9b54fefa7b23ba780f4f26ca0316b0f0d9"},
+    {file = "python_dotenv-1.2.3.tar.gz", hash = "sha256:a20a594dabeaa385725aa239d5244871c143ecb356add8a20fcf23773a6c3a35"},
 ]
 
 [package.extras]
@@ -3100,4 +3100,4 @@ allauth = ["crispy-tailwind", "django-allauth", "django-crispy-forms"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "b53cb800a17ddf84f6db40ceb08effae72847dfccd9f4bf4ba00bf61b75a2f2e"
+content-hash = "3c9b0bf206d328463f2b498ed191aeaec0f5c8678a88b472ec6b1819da9a1258"
