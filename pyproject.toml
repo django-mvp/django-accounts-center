@@ -10,7 +10,7 @@ requires-python = ">=3.12,<4.0"
 dependencies = [
     # Bounds are the ranges CI actually verifies (5.2 and 6.0), per Article XV.
     "django (>=5.2.17,<7.0)",
-    "django-mvp (>=0.16.1,<1.0)",
+    "django-mvp (>=0.20.1,<1.0)",
 ]
 
 [project.optional-dependencies]
@@ -32,13 +32,13 @@ packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
 [tool.poetry.group.dev.dependencies]
-django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.19.0" }
+django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.19.2" }
 # Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
 # in the `allauth` extra for consumers; here so a dev `poetry install` gets a
 # working crispy_tailwind (tailwind_filters) rather than a partial one.
 django-crispy-forms = "^2.7"
 crispy-tailwind = "^1.0.3"
-python-dotenv = "^1.1.0"
+python-dotenv = "^1.2.3"
 django-extensions = "^4.1"
 beautifulsoup4 = "^4.14.3"
 # Family dev/test toolchain: ruff, mypy, deptry, pre-commit, pytest,
@@ -48,7 +48,7 @@ mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.2.0",
     "dev",
     "test",
 ] }
-pytest-playwright = "^0.8.0"
+pytest-playwright = "^0.9.0"
 
 # [tool.poetry.group.local.dependencies]
 # django-mvp = { path = "../django-mvp", develop = true }
