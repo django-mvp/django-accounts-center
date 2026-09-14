@@ -26,18 +26,6 @@ AccountCenterMenu = Menu(
 )
 
 
-def _iter_leaves(node):
-    """Yield the leaf items of a processed menu tree (groups descend)."""
-    children = getattr(node, "_processed_children", None)
-    if children is None:
-        children = list(node.children or [])
-    if children:
-        for child in children:
-            yield from _iter_leaves(child)
-    else:
-        yield node
-
-
 def get_active_section(request):
     """Return the AccountCenterMenu section for ``request`` as a dict.
 
@@ -46,9 +34,17 @@ def get_active_section(request):
     text), otherwise the request is a sub-page of the section (render the
     crumb as a link). Returns ``None`` on the overview page or when no
     section matches.
+
+    Sections are the leaf items nested under a group (a ``MenuGroup`` such as
+    ``allauth``'s "Email & Authentication"); the bare ``overview`` entry is
+    excluded because it has no children of its own, not because of its name.
+    ``process()`` already prunes anything not visible before this runs, and
+    only attaches a child to its processed parent, so a processed item's
+    ``.children`` and its inherited ``.leaves`` (anytree) walk exactly the
+    request-visible tree — no separate walker is needed here.
     """
     processed = AccountCenterMenu.process(request)
-    leaves = [item for item in _iter_leaves(processed) if item.visible and item.name != "overview"]
+    leaves = [leaf for group in processed.children if group.has_children for leaf in group.leaves]
 
     for item in leaves:
         if item.selected:

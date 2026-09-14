@@ -157,7 +157,7 @@ menu item may declare `url_names` in its `extra_context` — a tuple of URL-name
 prefixes identifying its sub-pages — so a breadcrumb can name the section a
 sub-page belongs to.
 
-`dac/menus.py:41-75` — `get_active_section()`, surfaced to templates as the
+`dac/menus.py:29-67` — `get_active_section()`, surfaced to templates as the
 `{% account_section %}` tag.
 
 ## Icon pack
