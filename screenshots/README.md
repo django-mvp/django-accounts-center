@@ -30,7 +30,7 @@ docs/_static/
 
 Output is gitignored and deliberately not committed. There is no automatic image comparison — you run these when you want to see how something looks, and you read the result yourself.
 
-The guard against markup regressions is the rendered-HTML contract tests under `tests/`, which assert the semantic structure and DaisyUI classes each element emits. Those run in CI and do block a PR. See Article XII of `memory/constitution.md` for why pixel-diffing was weighed and declined.
+The guard against markup regressions is the rendered-HTML contract tests under `tests/`, which assert the semantic structure and DaisyUI classes each element emits. Those run in CI and do block a PR. See Article XII of `CONSTITUTION.md` for why pixel-diffing was weighed and declined.
 
 ## Contents
 

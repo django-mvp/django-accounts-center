@@ -3,7 +3,7 @@
   "feature": "013-account-center-menu",
   "branch": "013-account-center-menu",
   "repo": "django-mvp/django-accounts-center",
-  "state": "IMPLEMENT",
+  "state": "MERGED",
   "state_history": [
     {
       "state": "SPECIFY",
@@ -24,6 +24,10 @@
     {
       "state": "IMPLEMENT",
       "at": "2026-07-31T13:20:00Z"
+    },
+    {
+      "state": "MERGED",
+      "at": "2026-07-31T20:20:11Z"
     }
   ],
   "gates": {
@@ -45,8 +49,8 @@
       "at": "2026-07-31T13:00:00Z"
     },
     "merge": {
-      "approved_by": null,
-      "at": null
+      "approved_by": "Sam",
+      "at": "2026-07-31T20:20:11Z"
     }
   },
   "stories": [
@@ -55,38 +59,74 @@
       "priority": "P0",
       "issue": null,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T001",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T002",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T003",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T004",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T005",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T006",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -95,7 +135,7 @@
       "priority": "P1",
       "issue": 44,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
@@ -115,18 +155,36 @@
         },
         {
           "id": "T010",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T011",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T012",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -135,23 +193,41 @@
       "priority": "P1",
       "issue": 43,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T013",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T014",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T015",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -160,23 +236,41 @@
       "priority": "P2",
       "issue": 45,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T016",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T017",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T018",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -185,28 +279,52 @@
       "priority": "P3",
       "issue": 46,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T019",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T020",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T021",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T022",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     },
@@ -215,23 +333,41 @@
       "priority": "P9",
       "issue": null,
       "worktree": null,
-      "status": "todo",
+      "status": "done",
       "replans": 0,
       "tasks": [
         {
           "id": "T023",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T024",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         },
         {
           "id": "T025",
-          "status": "todo",
-          "attempts": 0
+          "status": "done",
+          "attempts": 0,
+          "evidence": {
+            "commands": [
+              "poetry run pytest -q"
+            ],
+            "verified_by_ci": true
+          }
         }
       ]
     }
@@ -252,6 +388,6 @@
   },
   "pr": {
     "number": 47,
-    "draft": true
+    "draft": false
   }
 }

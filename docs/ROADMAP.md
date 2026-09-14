@@ -3,7 +3,7 @@
 **Date:** 2026-07-27
 
 This document was designed against [GOALS.md](../GOALS.md). See also [CONTEXT.md](../CONTEXT.md) for
-domain terminology and [memory/constitution.md](../memory/constitution.md) for project standards.
+domain terminology and [CONSTITUTION.md](../CONSTITUTION.md) for project standards.
 
 Much of what follows is partly built. Each item says what exists today, so the sequence reads as
 the whole build rather than as a list of gaps.
