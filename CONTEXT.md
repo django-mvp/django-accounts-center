@@ -92,7 +92,14 @@ A card is a block in the page's own render, sharing its context — `user` and
 everything the project's context processors provide are already there, and
 nothing is passed to it. There is no attribute to declare and no registry.
 
-The worked example is `dac/allauth/templates/mvp/account/overview.html`.
+What a card can say is bounded by what a template can ask, so an integration
+whose cards need more than attribute lookups gives itself one tag returning one
+object rather than a filter per question. `dac.allauth` does this with
+`{% account_summary as account %}`, and reports an optional app that is not
+installed as `None` so a card can tell an absent feature from an empty one.
+
+The worked example is `dac/allauth/templates/mvp/account/overview.html`, with
+its tag in `dac/allauth/templatetags/dac_allauth.py`.
 
 ## Entrance layout
 

@@ -85,11 +85,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `{{ "some.app"|app_is_installed }}`, a template filter, so a card can tell
-  "this project does not have that app" from "you have nothing there yet".
-  django-mvp owns the function behind it and is asked for the filter at
-  [django-mvp#355](https://github.com/django-mvp/django-mvp/issues/355); this
-  copy goes when that lands.
+- `{% account_summary as account %}`, one tag carrying everything the allauth
+  cards say about the person looking at them. A card is a template block with
+  no view behind it, so what it can say is bounded by what a template can ask,
+  and a filter per question grows a filter every time a card learns to say
+  something new. The object grows a field instead.
+
+  An optional allauth app that is not installed is reported as `None` rather
+  than an empty section, so `{% if account.mfa %}` asks whether the project has
+  two-factor at all and `account.mfa.enabled` asks whether this person turned
+  it on. Those are different sentences and only one belongs on a page.
 
 ## [v0.7.1] - 2026-08-06
 

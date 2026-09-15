@@ -88,3 +88,12 @@ Settings, URLs and customisation are covered in the
 
 [ROADMAP.md](ROADMAP.md) records what is built, what is next, and which parts of the Account
 Center belong to django-mvp rather than to this package.
+
+## Decisions
+
+The two that shape everything above:
+
+- [ADR 0001 — Style allauth through elements and layouts, never page forks](adr/0001-elements-first-allauth-integration.md),
+  which is why a new allauth feature is styled on arrival.
+- [ADR 0002 — Account Center visibility is resolved per request](adr/0002-account-center-visibility-is-per-request.md),
+  which is why a menu entry or a card can apply to one person and not another.
