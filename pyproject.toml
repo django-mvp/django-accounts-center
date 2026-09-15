@@ -10,7 +10,7 @@ requires-python = ">=3.12,<4.0"
 dependencies = [
     # Bounds are the ranges CI actually verifies (5.2 and 6.0), per Article XV.
     "django (>=5.2.17,<7.0)",
-    "django-mvp (>=0.20.1,<1.0)",
+    "django-mvp (>=0.22,<1.0)",
 ]
 
 [project.optional-dependencies]

@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Every Account Center page raised when this package was installed alongside
+  django-mvp 0.22.0.** That release gives django-mvp an Account Center of its
+  own, and with it a menu named `AccountCenterMenu` — the name this package
+  already used. django-flex-menus keeps every menu in one tree and looks one up
+  by name, so a second claimant does not shadow the first: it leaves the name
+  unresolvable, and every page that draws the menu raises rather than one of
+  the two winning. The menu is now django-mvp's, re-exported from `dac.menus`
+  so both import paths reach the same object and an integration's `append`
+  calls are unchanged.
+
+  The landing page's own entry is django-mvp's too, and reads **Overview**
+  where it read "Account Center" before — the area's name is already above it.
+  Nothing else about the menu changes.
+
+### Changed
+
+- `django-mvp` now requires `>=0.22`. The Account Center that release
+  introduced is the one this package's menu and pages now belong to, so an
+  earlier version no longer describes what this package needs.
+
+- `DAC_ICONS` no longer registers `account_center` or `overview`. django-mvp's
+  `BS5_ICONS` ships both, mapped to the same glyphs this pack used, and a name
+  in both packs is reported as a collision. Either name still resolves and
+  nothing on a page changes.
+
 ## [v0.7.1] - 2026-08-06
 
 ### Added

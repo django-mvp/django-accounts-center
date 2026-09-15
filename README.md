@@ -61,9 +61,10 @@ email, password, 2FA, sessions and connected accounts, and a menu group whose
 items appear only for the allauth apps you install.
 
 The core `dac` app adds the pieces that are not allauth's business: the Account
-Center overview page (`account-center` URL), the `AccountCenterMenu` the
-integrations append to, a `DAC_ICONS` easy-icons pack, and a prebuilt `dac.css`
-stylesheet. django-mvp's `<c-user.sidebar-menu>` picks up an "Account Center"
+Center overview page (`account-center` URL), a `DAC_ICONS` easy-icons pack, and
+a prebuilt `dac.css` stylesheet. The `AccountCenterMenu` the integrations append
+to is django-mvp's, re-exported from `dac.menus` so either import reaches the
+same menu. django-mvp's `<c-user.sidebar-menu>` picks up an "Account Center"
 entry and a POST logout form once the URLs are installed.
 
 ## Scope

@@ -896,14 +896,14 @@ rich = ">=13"
 
 [[package]]
 name = "django-mvp"
-version = "0.20.1"
+version = "0.22.0"
 description = "MVP framework for Django - scaffold production-ready applications with sophisticated layouts and UI patterns designed for data-centric applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "django_mvp-0.20.1-py3-none-any.whl", hash = "sha256:5a44cc362028fac8384c2a4d57434b6c6275d7045ada34ba6a12b9fb4480a548"},
-    {file = "django_mvp-0.20.1.tar.gz", hash = "sha256:bb8a4d1b67af546ca1ce9e6440a1ab328396cdd4f9c9cc3843144ed7e04c2a5a"},
+    {file = "django_mvp-0.22.0-py3-none-any.whl", hash = "sha256:2c94e2b9d2d6a491d1d3e6ea53715847c5a30cc5317bf7572e8951008722439a"},
+    {file = "django_mvp-0.22.0.tar.gz", hash = "sha256:ef9a6dcbf913bc9c1dfe35f647e0adf3a11277192b746eb12ea415363306faed"},
 ]
 
 [package.dependencies]
@@ -3100,4 +3100,4 @@ allauth = ["crispy-tailwind", "django-allauth", "django-crispy-forms"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "77333fc8b9b0d12b778effa994d62893c77f26576d67c82bb5ce569f383c115b"
+content-hash = "9937c080b14f44ba7b7fc2bda940476c613ffbdf4c0e1862a7a56105edc59e85"

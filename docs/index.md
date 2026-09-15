@@ -33,7 +33,9 @@ turns on. Shipped today: `dac.allauth`, and it is the only one.
 
 ### Menu entries
 
-Contribute entries from your own `menus.py`, appending a labelled group to `AccountCenterMenu`:
+Contribute entries from your own `menus.py`, appending a labelled group to `AccountCenterMenu`.
+django-mvp declares the menu; `dac.menus` re-exports it, so the import below and
+`from mvp.menus import AccountCenterMenu` reach the same object:
 
 ```python
 from flex_menu import MenuItem

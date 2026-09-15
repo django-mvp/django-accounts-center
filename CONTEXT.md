@@ -144,11 +144,15 @@ Any page override must be listed in `PAGE_OVERRIDE_ALLOWLIST` in
 ## Account Center menu
 
 The sub navigation shown on every Account Center page, built on
-django-flex-menus. The core package registers only the Overview item. Each
-integration appends its own labelled `MenuGroup`, so the menu reflects the
-integrations a project installs.
+django-flex-menus. django-mvp declares the menu and registers its Overview
+item. Each integration appends its own labelled `MenuGroup`, so the menu
+reflects the integrations a project installs.
 
-`dac/menus.py` — `AccountCenterMenu`
+`dac/menus.py` re-exports it from `mvp.menus`, so `dac.menus.AccountCenterMenu`
+and `mvp.menus.AccountCenterMenu` are one object. Declaring a second menu of
+that name here would not shadow django-mvp's — django-flex-menus keeps one tree
+and resolves by name, so two claimants make the name unresolvable and every
+page rendering the menu raises.
 
 ## Section
 
@@ -157,14 +161,16 @@ menu item may declare `url_names` in its `extra_context` — a tuple of URL-name
 prefixes identifying its sub-pages — so a breadcrumb can name the section a
 sub-page belongs to.
 
-`dac/menus.py:29-67` — `get_active_section()`, surfaced to templates as the
+`dac/menus.py` — `get_active_section()`, surfaced to templates as the
 `{% account_section %}` tag.
 
 ## Icon pack
 
 `DAC_ICONS`, the django-easy-icons pack this package registers on top of
 django-mvp's `BS5_ICONS`. Comma-separated keys register aliases for one glyph
-(`"mfa, two_factor, security"`).
+(`"mfa, two_factor, security"`). It holds only names `BS5_ICONS` does not — a
+key in both packs is reported as a collision, and the Account Center's own
+`account_center` and `overview` belong to django-mvp.
 
 `dac/icons.py`
 

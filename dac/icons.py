@@ -17,8 +17,10 @@ Comma-separated keys register aliases for the same glyph.
 
 DAC_ICONS = {
     # ── Account Center navigation ────────────────────────────────────────
-    "account_center": "bi bi-person-gear",
-    "overview": "bi bi-grid",
+    # account_center and overview belong to django-mvp's pack, which owns the
+    # Account Center itself and maps both to the same glyphs this pack used to.
+    # Repeating them here only reassigns a name this pack agrees with, which
+    # django-easy-icons reports as a collision.
     "password": "bi bi-lock-fill",
     "password_change": "bi bi-key-fill",
     "mfa, two_factor, security": "bi bi-shield-lock",

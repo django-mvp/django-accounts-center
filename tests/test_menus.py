@@ -9,8 +9,13 @@ hides an item, is django-flex-menus' behaviour and is tested there.
 """
 
 import pytest
+from anytree import PreOrderIter
 from bs4 import BeautifulSoup
 from django.urls import reverse
+from flex_menu import root
+from mvp import menus as mvp_menus
+
+from dac import menus as dac_menus
 
 
 def _menu_labels(response):
@@ -131,3 +136,29 @@ class TestPageUnaffectedByHiddenEntry:
         assert gated_messages is not None
         assert ungated_messages is not None
         assert str(gated_messages) == str(ungated_messages)
+
+
+class TestAccountCenterMenuIsSingular:
+    """django-mvp ships the Account Center menu; this package adds to it.
+
+    django-flex-menus holds every menu in one process-wide tree and looks one
+    up by name, refusing to answer when two share it. A second menu declared
+    here under the same name therefore does not shadow django-mvp's — it makes
+    the name unresolvable, and every page that renders the menu raises instead.
+    """
+
+    def test_the_name_resolves_to_exactly_one_menu(self):
+        """Looking the menu up by name answers, rather than raising because
+        two menus in the tree claim the name."""
+        assert root.get("AccountCenterMenu") is not None
+
+    def test_the_menu_this_package_uses_is_the_one_django_mvp_ships(self):
+        """Entries contributed here land on django-mvp's menu, so they show up
+        on the pages django-mvp renders from it."""
+        assert dac_menus.AccountCenterMenu is mvp_menus.AccountCenterMenu
+
+    def test_this_package_declares_no_menu_of_its_own_under_that_name(self):
+        """The whole tree holds one menu by that name, so no second
+        declaration can reappear here unnoticed."""
+        matches = [node for node in PreOrderIter(root) if node.name == "AccountCenterMenu"]
+        assert len(matches) == 1
