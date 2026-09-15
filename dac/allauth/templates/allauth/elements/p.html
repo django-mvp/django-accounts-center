@@ -1,12 +1,17 @@
 {% load allauth %}
+
 {% comment %}
-  Wrapper carries the dac-prose class (cotton drops a class passed to
-  <c-text>, so it can't hold one itself). dac-prose styles the bare inline
-  <a> tags allauth emits in paragraph copy — e.g. the "sign up"/"sign in"
-  link in the login/signup intro — which Tailwind's preflight would
-  otherwise leave looking like plain text.
+  Body copy. The wrapper carries `prose`, which is what styles the bare inline
+  <a> tags allauth emits inside paragraph copy — the "sign up"/"sign in" link
+  in the login and signup intros, for one. Those arrive inside a
+  blocktranslate, so there is no way to put a class on the anchor itself, and
+  Tailwind's preflight would otherwise leave them looking like plain text.
+
+  `prose` comes from django-mvp's stylesheet and takes its colours from the
+  active theme, which is also where the body colour below comes from. This
+  package used to ship a rule of its own for both.
 {% endcomment %}
-<div class="dac-prose text-base-content/80">
+<div class="prose max-w-none">
   <c-text>
     {% slot %}
     {% endslot %}

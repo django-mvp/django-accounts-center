@@ -2,7 +2,7 @@
 Integration tests for the MFA management template overrides.
 
 Covers:
-  - US1: base_manage.html extends dac/base.html (layout, sidebar, breadcrumbs)
+  - US1: base_manage.html extends dac/base.html (layout, sidebar)
   - US2: TOTP, Recovery Codes pages render with DAC layout and correct content
   - US3: WebAuthn pages render with DAC layout and correct content
   - Edge cases: element-tag removal, RC button suppression, save-once checkbox
@@ -90,17 +90,6 @@ class TestMFALayout:
         assert response.status_code == 200
         assert "Account navigation" in response.content.decode()
 
-    def test_account_center_breadcrumb_present(self, client):
-        user = UserFactory()
-        client.force_login(user)
-        response = client.get(reverse("mfa_index"))
-        assert "Account Center" in response.content.decode()
-
-    def test_two_factor_breadcrumb_present(self, client):
-        user = UserFactory()
-        client.force_login(user)
-        response = client.get(reverse("mfa_index"))
-        assert "Two-Factor Authentication" in response.content.decode()
 
 
 # ---------------------------------------------------------------------------

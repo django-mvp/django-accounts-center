@@ -1,15 +1,25 @@
 {% extends "mvp/base.html" %}
-{% load i18n flex_menu static dac %}
+{% load i18n flex_menu %}
+
 {% comment %}
-  Account Center base: the normal mvp app shell (sidebar, navbar, dock all
-  untouched) with a two-column main area — the Account Center sub menu on the
-  left, page content on the right. allauth's manage layout and dac's own
-  pages both extend this template.
+  Account Center pages: the normal mvp app shell with the area's navigation
+  beside the content.
+
+  WORKAROUND — django-mvp#358. This should extend "mvp/account/base.html" and
+  restate none of the arrangement below, which is what every other app adding
+  a page to the area does. It cannot yet. That layout builds itself inside
+  {% block content %} and asks pages to fill {% block account.content %},
+  and allauth's stock templates all fill {% block content %} — a name they fix
+  across every page they ship. Django registers a nested block in a child the
+  same as a top-level one, so the allauth page's `content` overrides the
+  layout's own and the navigation disappears, quietly, on a page that still
+  returns 200. Forking allauth's pages to rename the block is the thing
+  ADR 0001 exists to prevent. Remove all of this and extend the packaged
+  layout once that issue closes.
 
   Blocks head_title / extra_head / extra_body are mapped onto mvp's
   title / head / extra_js blocks so stock allauth templates work unchanged.
 {% endcomment %}
-
 {% block title %}
   {% block head_title %}
     {% trans "Account Center" %}
@@ -22,15 +32,11 @@
   {% endblock extra_head %}
 {% endblock head %}
 
-{% block styles %}
-  <link rel="stylesheet" href="{% static 'css/dac.css' %}" />
-{% endblock styles %}
-
 {% block app.main %}
   <c-app.main>
     <div class="container mx-auto px-4 py-4 lg:py-6">
       <div class="flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
-        <aside class="w-full lg:w-65 lg:shrink-0"
+        <aside class="w-full lg:w-1/4 lg:shrink-0"
                aria-label="{% trans "Account navigation" %}">
           {% block account_menu %}
             {% comment %}
@@ -39,7 +45,6 @@
               CSS-only single-markup would require overriding DaisyUI's
               dropdown hidden-state internals per breakpoint — too brittle.
             {% endcomment %}
-            {% account_section as section %}
             <c-dropdown full class="w-full lg:hidden" content_class="p-2">
               <c-slot name="button">
                 <c-button tabindex="0"
@@ -48,31 +53,14 @@
                           align="between"
                           reverse
                           icon="chevron_down"
-                          text="{% if section %}{{ section.label }}{% else %}{% trans "Account Center" %}{% endif %}" />
+                          text="{% trans "Account Center" %}" />
               </c-slot>
               {% render_menu "AccountCenterMenu" renderer="sidebar" %}
             </c-dropdown>
-            <div class="hidden lg:block card bg-base-200 p-2">
-              {% render_menu "AccountCenterMenu" renderer="sidebar" %}
-            </div>
+            <div class="hidden lg:block card bg-base-200 p-2">{% render_menu "AccountCenterMenu" renderer="sidebar" %}</div>
           {% endblock account_menu %}
         </aside>
         <div class="grow min-w-0 max-w-3xl">
-          {% block account_breadcrumbs %}
-            {% account_section as section %}
-            {% if section %}
-              <c-breadcrumbs class="mb-2">
-                <c-breadcrumbs.item text="{% trans "Account Center" %}"
-                                    href="{% url 'account-center' %}" />
-                {% if section.is_current %}
-                  <c-breadcrumbs.item text="{{ section.label }}" />
-                {% else %}
-                  <c-breadcrumbs.item text="{{ section.label }}"
-                                      href="{{ section.url }}" />
-                {% endif %}
-              </c-breadcrumbs>
-            {% endif %}
-          {% endblock account_breadcrumbs %}
           {% block content %}
           {% endblock content %}
         </div>

@@ -16,11 +16,14 @@ integrations a project installs. Today they all come from `dac.allauth`.
 
 Singular **Account Center**, not "Accounts Center" — even though the distribution
 is named `django-accounts-center`. The code is consistent on this
-(`AccountCenterView`, `AccountCenterMenu`, the `account-center` URL name). The
-plural exists only in the package name and should not spread into new code.
+(`AccountCenterMenu`, the `account-center` URL name). The plural exists only in
+the package name and should not spread into new code.
 
-- `dac/views.py` — `AccountCenterView`, the overview page
-- `dac/urls.py` — mounted at the URLconf root as `account-center`
+The area itself is django-mvp's: it ships the landing page, the layout, the
+menu and the URLconf, and this package fills them in.
+
+- `mvp/urls.py` — the landing page, mounted by the project at its own prefix
+- `dac/urls.py` — the installed integrations' pages, mounted at the same prefix
 
 **Avoid:** "accounts center", "user center", "profile area".
 
@@ -39,7 +42,7 @@ An integration may contribute any of:
 
 - **URLs** — included conditionally from `dac/urls.py` via `app_is_installed()`
 - **Menu items** — appended to `AccountCenterMenu` from its own `menus.py`
-- **Overview cards** — through the two `AppConfig` hooks described below
+- **Overview cards** — by shipping its own copy of the landing page's template
 
 Installation decides whether a contribution **exists**. The request decides
 whether it is **shown** — see
@@ -47,10 +50,9 @@ whether it is **shown** — see
 
 For menu entries the second half is built: an integration attaches a
 **visibility check** to an entry it wants shown to only some people, and the
-Account Center asks it while building the menu for whoever is looking.
-Overview cards are still decided once at startup from `app_is_installed()`,
-so every signed-in person sees the same cards — that half stays decided, not
-built.
+Account Center asks it while building the menu for whoever is looking. A card
+answers the same question in its own template, where the request and the
+person making it are both in scope.
 
 URLs are a further exception to "the integration contributes it": `dac/urls.py`
 names each integration explicitly, so a new integration is not reachable
@@ -77,17 +79,27 @@ integration is installed, exactly as an entry without one always has.
 `dac/menus.py`, `tests/testapp/menus.py` (the worked example). See
 [ADR 0002](docs/adr/0002-account-center-visibility-is-per-request.md).
 
-## Overview card hooks
+## Overview card
 
-Two optional attributes an `AppConfig` may define to contribute cards to the
-Account Center overview page. `AccountCenterView.get_context_data()` walks every
-installed app and collects them, so any app can contribute — not only a `dac.*`
-integration.
+A card on the Account Center's landing page, contributed by shipping a copy of
+that page's template, extending the same name, and adding to its card block
+through `{{ block.super }}`. Django resolves a same-name extends to the next
+template along the loader path, so several apps chain and the chain ends at
+django-mvp's own copy. A contributing app must be listed before `mvp` in
+`INSTALLED_APPS` or the loader never reaches it.
 
-- `dac_overview_template` — a template rendered inside the overview grid
-- `dac_overview_context(request)` — returns extra context for that template
+A card is a block in the page's own render, sharing its context — `user` and
+everything the project's context processors provide are already there, and
+nothing is passed to it. There is no attribute to declare and no registry.
 
-Defined at `dac/views.py:25-37`. The worked example is `dac/allauth/apps.py:20-57`.
+What a card can say is bounded by what a template can ask, so an integration
+whose cards need more than attribute lookups gives itself one tag returning one
+object rather than a filter per question. `dac.allauth` does this with
+`{% account_summary as account %}`, and reports an optional app that is not
+installed as `None` so a card can tell an absent feature from an empty one.
+
+The worked example is `dac/allauth/templates/mvp/account/overview.html`, with
+its tag in `dac/allauth/templatetags/dac_allauth.py`.
 
 ## Entrance layout
 
@@ -97,7 +109,7 @@ sign-in codes. Renders as a centered card with the site logo and no app shell.
 The core package owns it, in two files:
 
 - `dac/templates/dac/entrance.html` — the page an app extends. Carries the mvp
-  base shell, the stylesheet link, the messages region and `{% block content %}`
+  base shell, the messages region and `{% block content %}`
 - `dac/templates/cotton/dac/entrance.html` — the `<c-dac.entrance>` component:
   mvp's `<c-entrance>` card with the site logo above the slot
 
@@ -144,27 +156,23 @@ Any page override must be listed in `PAGE_OVERRIDE_ALLOWLIST` in
 ## Account Center menu
 
 The sub navigation shown on every Account Center page, built on
-django-flex-menus. The core package registers only the Overview item. Each
-integration appends its own labelled `MenuGroup`, so the menu reflects the
-integrations a project installs.
+django-flex-menus. django-mvp declares the menu and registers its Overview
+item. Each integration appends its own labelled `MenuGroup`, so the menu
+reflects the integrations a project installs.
 
-`dac/menus.py` — `AccountCenterMenu`
-
-## Section
-
-A top-level entry in the Account Center menu, used for breadcrumb resolution. A
-menu item may declare `url_names` in its `extra_context` — a tuple of URL-name
-prefixes identifying its sub-pages — so a breadcrumb can name the section a
-sub-page belongs to.
-
-`dac/menus.py:29-67` — `get_active_section()`, surfaced to templates as the
-`{% account_section %}` tag.
+`dac/menus.py` re-exports it from `mvp.menus`, so `dac.menus.AccountCenterMenu`
+and `mvp.menus.AccountCenterMenu` are one object. Declaring a second menu of
+that name here would not shadow django-mvp's — django-flex-menus keeps one tree
+and resolves by name, so two claimants make the name unresolvable and every
+page rendering the menu raises.
 
 ## Icon pack
 
 `DAC_ICONS`, the django-easy-icons pack this package registers on top of
 django-mvp's `BS5_ICONS`. Comma-separated keys register aliases for one glyph
-(`"mfa, two_factor, security"`).
+(`"mfa, two_factor, security"`). It holds only names `BS5_ICONS` does not — a
+key in both packs is reported as a collision, and the Account Center's own
+`account_center` and `overview` belong to django-mvp.
 
 `dac/icons.py`
 
@@ -173,12 +181,14 @@ Distinct from the **provider icons** in
 rendered by `provider.html` through a django-easy-icons `"svg"` renderer keyed by
 allauth's provider id.
 
-## Prebuilt stylesheet
+## Stylesheet
 
-`dac/static/css/dac.css`, the Tailwind v4 + DaisyUI 5 build shipped inside the
-package so a consuming project needs no Tailwind toolchain of its own. Built from
-`assets/tailwind.css` by `npm run build:css`, and rebuilt whenever templates
-change.
+django-mvp's, and the only one. This package ships no CSS and no build to
+produce any: it composes mvp's components and the DaisyUI utilities behind
+them, so a class used here has to be one mvp's own stylesheet already carries
+(constitution Article XVII).
 
-A project running its own Tailwind build adds this package's templates as a
-source instead, and overrides the `styles` block.
+Every page reaches it by leaving `{% block styles %}` alone.
+`tests/test_architecture.py` fails on a `.css` file under the package, on a
+`package.json` at the root, and on any template overriding that block — an
+unstyled page is not an error, so nothing else would notice.

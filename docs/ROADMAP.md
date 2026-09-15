@@ -1,6 +1,6 @@
 # Roadmap — django-accounts-center
 
-**Date:** 2026-07-27
+**Date:** 2026-07-27 · Revised 2026-09-15
 
 This document was designed against [GOALS.md](../GOALS.md). See also [CONTEXT.md](../CONTEXT.md) for
 domain terminology and [CONSTITUTION.md](../CONSTITUTION.md) for project standards.
@@ -32,8 +32,11 @@ has been mapped onto the next minor rather than applied literally.
 
 ## Essential goals: v0.8.0
 
-The framework itself: three page layouts, and a way to build against them that works and is
-written down. No integration is required to reach this release, and none of it is specific to one.
+The framework itself, and a way to build against it that works and is written down. Most of the
+framework is now django-mvp's: 0.22 gave it an Account Center with a landing page, a layout, a
+menu any installed app can add to, and an includable URLconf. What is left here is the part
+specific to accounts — the branded entrance page, and the contract an integration builds against.
+No integration is required to reach this release, and none of it is specific to one.
 
 ### R1 — The entrance page
 
@@ -42,17 +45,19 @@ written down. No integration is required to reach this release, and none of it i
 A full-screen page holding a single centered card, for anything a signed-out visitor sees. Built
 from django-mvp's entrance component rather than restyled here.
 
-It renders today, but only from inside the one integration that exists. Any other integration with
-pages for signed-out visitors has nothing to inherit, and would have to extend a template named
-for a package it has nothing to do with. The card is also one fixed size.
+This is the one layout that stays here. django-mvp ships an entrance page of its own, but the
+branded card — the site logo above the content — is this package's, and a project gets it by
+extending one template rather than assembling it.
+
+It renders today, owned by the core app and reachable by any integration. The card size is still
+the interim two options.
 
 **Deliverables:**
 
-- The page is owned by the core app and reachable by any integration.
-- The card size is configurable. Where django-mvp's component cannot express what is needed, the
-  shortfall is raised there rather than worked around here.
-- Whatever renders entrance pages today reaches the shared page instead of defining its own, with
-  no visible change to what it already produces.
+- The card size accepts django-mvp's full scale rather than the interim two options
+  ([#20](https://github.com/django-mvp/django-accounts-center/issues/20); the upstream scale
+  shipped in django-mvp 0.16).
+- Any entrance page that reads better at a different width moves onto it.
 
 Serves G2.
 
@@ -60,21 +65,22 @@ Serves G2.
 
 *feature · advances G3, G6*
 
-A single page style for any view where a person controls one aspect of their account. It carries
-the sub menu, the breadcrumbs and the content area, so a management view written by one
-integration is indistinguishable in shape from one written by another.
+A single page style for any view where a person controls one aspect of their account, so a
+management view written by one integration is indistinguishable in shape from one written by
+another.
 
-The page and its menu exist. What is missing is who each entry is for: menu entries are decided
-once, when the process starts, from which apps are installed, so every signed-in person sees the
-same menu. An integration whose pages apply to only some people has no way to say so, and the
-person they do not apply to gets an entry leading somewhere useless.
+Per-request menu visibility is built: an integration attaches a check to an entry, and the entry
+is absent for anyone it declines.
+
+The page itself should be django-mvp's, and is not yet. Its account layout builds itself inside
+`{% block content %}`, and allauth's stock templates all fill that same block — so a page routed
+straight through it loses the navigation panel, quietly. This package keeps a layout of its own
+until that is resolved upstream.
 
 **Deliverables:**
 
-- Any integration can serve a management view through this page without special-casing.
-- An integration declares, per request, whether each of its menu entries applies to the current
-  visitor.
-- Tests that an entry visible to one person is absent for another.
+- The management page is django-mvp's, and this package restates none of it
+  ([django-mvp#358](https://github.com/django-mvp/django-mvp/issues/358)).
 
 Serves G3 and G6.
 
@@ -83,18 +89,13 @@ Serves G3 and G6.
 *feature · advances G4, G6*
 
 The landing page of the Account Center: a dashboard of cards, each owned and rendered by the
-integration that contributed it. The page collects whatever is installed without knowing what any
-of it is.
+integration that contributed it.
 
-Collection works. Visibility does not: a contributed card renders for everyone, so an integration
-that applies to a subset of people shows the rest a card about something they do not have.
-
-**Deliverables:**
-
-- An integration declares, per request, whether each of its cards applies to the current visitor,
-  and a card that does not apply is absent rather than empty.
-- Card ordering is defined rather than an accident of installation order.
-- Tests that a card visible to one person is absent for another.
+Both halves are done, and both came from moving onto django-mvp's page. A card is a block in that
+page's own render, so it sees the request and the person making it and decides for itself whether
+it applies. Card order follows `INSTALLED_APPS`, which is the ordinary Django rule for template
+overrides rather than something to correct — an earlier version of this item asked for an ordering
+this package defined, which would mean owning the page again.
 
 Serves G4 and G6.
 
@@ -106,21 +107,19 @@ The machinery an integration plugs into: it is enabled by installing it and noth
 contributes its menu entries, its cards and its pages through supported means, and a project
 carries only the dependencies of what it enables.
 
-Sub-apps are how this works today. That is an implementation choice, not a commitment, and the
-work here is free to arrive at something better.
+Menu entries and cards are contributed through django-mvp's own extension points, and need
+nothing from this package. URLs are the gap: the core app names each integration explicitly, so a
+new one is unreachable without an edit to it.
 
-Two parts are missing. URLs are not contributed at all — the core names each integration
-explicitly, so a new one is unreachable without an edit to the core. And there is no single
-address for account management: the path is chosen by each consuming project, and this repo's
-README, example project and tests each pick a different one.
+The single-address deliverable is withdrawn. django-mvp mounts its Account Center wherever the
+consuming project puts it, deliberately, and a path fixed here would contradict that. What this
+package owes instead is that everything it serves sits beneath whichever prefix the project picks,
+and that its own README, example project and tests agree on one.
 
 **Deliverables:**
 
 - An integration's pages are reachable purely as a consequence of it being installed.
-- One predictable path for account management, owned by this package rather than by the consuming
-  project, and consistent everywhere this repo demonstrates it.
-- A stated position on where entrance pages sit relative to that path, given they serve anonymous
-  visitors.
+- This repo demonstrates one prefix consistently, rather than three.
 - The utilities an integration needs are deliberate, supported surfaces rather than incidental
   ones, and behave the same for every integration.
 
@@ -133,19 +132,16 @@ Serves G1, G5 and G8. What an integration must provide is documented in R5.
 Someone building an integration can do it from documentation, without reading this package's
 source or copying an existing integration and inheriting its accidents.
 
-Today there is prose in the README, a glossary entry, and one worked example. The rules that are
-not expressed in code are discoverable only by getting them wrong: the order an integration must
-appear in relative to the package it integrates, what a contributed card may assume about the page
-around it, what happens when two integrations contribute the same thing.
-
 This closes the phase rather than opening it. A contract written before R4 settles would document
-guesses.
+guesses. It now has to say which parts belong to django-mvp and which to this package, because an
+author reaching for the wrong one finds nothing.
 
 **Deliverables:**
 
 - A reference covering every extension point, what each receives and what it is expected to
-  return.
-- The rules that are not enforced by code, stated as rules.
+  return, naming the package that owns each.
+- The rules that are not enforced by code, stated as rules — the `INSTALLED_APPS` ordering an
+  integration must satisfy among them.
 - A worked example an author can follow end to end.
 
 Serves G7. Documentation is the whole of it — machine-checkable conformance is not planned.

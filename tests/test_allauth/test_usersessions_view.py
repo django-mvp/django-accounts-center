@@ -59,18 +59,6 @@ class TestUserSessionsLayout:
         assert response.status_code == 200
         assert "Account navigation" in response.content.decode()
 
-    def test_account_center_breadcrumb_present(self, client):
-        user = UserFactory()
-        client.force_login(user)
-        response = client.get(reverse("usersessions_list"))
-        assert "Account Center" in response.content.decode()
-
-    def test_sessions_breadcrumb_present(self, client):
-        user = UserFactory()
-        client.force_login(user)
-        response = client.get(reverse("usersessions_list"))
-        assert "Sessions" in response.content.decode()
-
     def test_sessions_heading_present(self, client):
         user = UserFactory()
         client.force_login(user)

@@ -1,0 +1,156 @@
+{% extends "mvp/account/overview.html" %}
+{% load i18n dac_allauth %}
+
+{% comment %}
+  The allauth cards on the Account Center's landing page.
+
+  This extends the template name it is itself saved under. Django resolves that
+  to the next template of the name along the loader path rather than back to
+  this file, so several apps can each ship one and chain through
+  {{ block.super }}, ending at django-mvp's own copy. For this one to be
+  reached at all, "dac.allauth" must come before "mvp" in INSTALLED_APPS: the
+  loader returns the first match, and an app listed after mvp never renders.
+
+  Everything the cards say comes from one {% account_summary %} call. There is
+  no view behind them and nothing is passed to them — the block shares the
+  surrounding page's context, and the tag reads the person out of it.
+
+  A section is None when its allauth app is not installed, so `{% if account.mfa %}`
+  asks whether the project has two-factor at all and `account.mfa.enabled` asks
+  whether this person turned it on.
+{% endcomment %}
+{% block account.cards %}
+  {{ block.super }}
+  {% account_summary as account %}
+  <c-card title="{% trans "Email" %}" icon="email">
+    <c-slot name="badges">
+      {% if account.unverified_email_count %}
+        <c-badge variant="warning"
+                 size="sm"
+                 text="{% blocktrans count n=account.unverified_email_count %}{{ n }} unverified{% plural %}{{ n }} unverified{% endblocktrans %}" />
+      {% endif %}
+    </c-slot>
+    {% for emailaddress in account.emails %}
+      <div class="flex flex-wrap items-center gap-2 text-sm">
+        <span class="truncate">{{ emailaddress.email }}</span>
+        {% if emailaddress.primary %}
+          <c-badge size="sm" text="{% trans "Primary" %}" />
+        {% endif %}
+        {% if emailaddress.verified %}
+          <c-badge variant="success"
+                   size="sm"
+                   text="{% trans "Verified" %}" />
+        {% else %}
+          <c-badge variant="warning"
+                   size="sm"
+                   text="{% trans "Unverified" %}" />
+        {% endif %}
+      </div>
+    {% empty %}
+      <c-text size="sm"
+              muted
+              text="{% trans "No email address on record." %}" />
+    {% endfor %}
+    <c-slot name="footer">
+      <c-button size="sm"
+                variant="primary"
+                icon="email"
+                href="{% url 'account_email' %}"
+                text="{% trans "Manage email" %}" />
+    </c-slot>
+  </c-card>
+  <c-card title="{% trans "Password" %}" icon="password">
+    {% if account.has_password %}
+      <c-text size="sm"
+              muted
+              text="{% trans "A password is set for your account." %}" />
+    {% else %}
+      <c-text size="sm"
+              muted
+              text="{% trans "You have no password set. You sign in via a third-party account, code or passkey." %}" />
+    {% endif %}
+    <c-slot name="footer">
+      {% if account.has_password %}
+        <c-button size="sm"
+                  variant="primary"
+                  icon="password_change"
+                  href="{% url 'account_change_password' %}"
+                  text="{% trans "Change password" %}" />
+      {% else %}
+        <c-button size="sm"
+                  variant="primary"
+                  icon="password_change"
+                  href="{% url 'account_change_password' %}"
+                  text="{% trans "Set password" %}" />
+      {% endif %}
+    </c-slot>
+  </c-card>
+  {% if account.social %}
+    <c-card title="{% trans "Connected accounts" %}"
+            icon="social">
+      {% for socialaccount in account.social.accounts %}
+        <div class="flex items-center gap-2 text-sm">
+          <span>{{ socialaccount.get_provider.name }}</span>
+          <span class="text-base-content/60 truncate">{{ socialaccount }}</span>
+        </div>
+      {% empty %}
+        <c-text size="sm"
+                muted
+                text="{% trans "No third-party accounts connected." %}" />
+      {% endfor %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="social"
+                  href="{% url 'socialaccount_connections' %}"
+                  text="{% trans "Manage connections" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+  {% if account.mfa %}
+    <c-card title="{% trans "Two-factor authentication" %}"
+            icon="mfa">
+      <c-slot name="badges">
+        {% if account.mfa.enabled %}
+          <c-badge variant="success"
+                   size="sm"
+                   text="{% trans "Enabled" %}" />
+        {% else %}
+          <c-badge variant="warning"
+                   size="sm"
+                   text="{% trans "Disabled" %}" />
+        {% endif %}
+      </c-slot>
+      {% if account.mfa.enabled %}
+        <c-text size="sm"
+                muted
+                text="{% trans "Your account is protected by two-factor authentication." %}" />
+      {% else %}
+        <c-text size="sm"
+                muted
+                text="{% trans "Add a second factor to make your account more secure." %}" />
+      {% endif %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="mfa"
+                  href="{% url 'mfa_index' %}"
+                  text="{% trans "Manage 2FA" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+  {% if account.sessions %}
+    <c-card title="{% trans "Sessions" %}" icon="sessions">
+      <c-text size="sm"
+              muted
+              text="{% blocktrans count n=account.sessions.count %}{{ n }} active session{% plural %}{{ n }} active sessions{% endblocktrans %}" />
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="sessions"
+                  href="{% url 'usersessions_list' %}"
+                  text="{% trans "Manage sessions" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+{% endblock account.cards %}

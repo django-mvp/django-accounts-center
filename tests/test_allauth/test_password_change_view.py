@@ -53,15 +53,15 @@ class TestPasswordChangeView:
         assert response.status_code == 200
 
     def test_has_page_content_block(self, client):
-        """Response must contain the DAC breadcrumb root 'Account Center'."""
+        """The page renders inside the Account Center, whose navigation names it."""
         user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
         assert "Account Center" in content
 
-    def test_has_change_password_breadcrumb(self, client):
-        """'Change Password' must appear in the breadcrumb output."""
+    def test_has_change_password_heading(self, client):
+        """'Change Password' must appear as the page's own heading."""
         user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("account_change_password"))
@@ -101,8 +101,8 @@ class TestPasswordSetView:
         response = client.get(reverse("account_set_password"))
         assert response.status_code == 200
 
-    def test_has_set_password_breadcrumb(self, client):
-        """'Set Password' must appear in the breadcrumb output."""
+    def test_has_set_password_heading(self, client):
+        """'Set Password' must appear as the page's own heading."""
         user = make_user_no_password()
         client.force_login(user)
         response = client.get(reverse("account_set_password"))
@@ -137,15 +137,15 @@ class TestBaseManagePasswordView:
 
     def test_base_manage_password_inherits_dac_base(self, client):
         """
-        Render base_manage_password.html directly and assert DAC sidebar/breadcrumb
-        structure is present (verifies the inheritance chain is unbroken).
+        Render base_manage_password.html directly and assert the Account
+        Center's navigation is present, which verifies the inheritance chain is
+        unbroken.
         """
         user = UserFactory()
         client.force_login(user)
         # Change-password is served by base_manage_password → base_manage → dac/base
         response = client.get(reverse("account_change_password"))
         content = response.content.decode()
-        # DAC sidebar is present
         assert "Account Center" in content
 
 

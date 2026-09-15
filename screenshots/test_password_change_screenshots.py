@@ -37,7 +37,7 @@ def _login_and_get_session_cookie(live_server, client, user):
 
 @pytest.mark.django_db(transaction=True)
 def test_password_change_page(page, live_server, client, django_user_model, save_screenshot):
-    """Authenticated user sees password_change.html with DAC layout and breadcrumbs."""
+    """Authenticated user sees password_change.html in the Account Center layout."""
     user = create_test_user(django_user_model)
 
     # Transfer session to Playwright

@@ -1,9 +1,7 @@
 """allauth section of the Account Center menu.
 
 Appends an "Email & Authentication" group to ``AccountCenterMenu``. Items for
-optional allauth apps appear only when the app is installed. Each item's
-``url_names`` lists the URL-name prefixes of its sub-pages so breadcrumbs can
-resolve the active section (see :func:`dac.menus.get_active_section`).
+optional allauth apps appear only when the app is installed.
 """
 
 from django.utils.translation import gettext_lazy as _
@@ -20,7 +18,6 @@ _items = [
         extra_context={
             "label": _("Email"),
             "icon": "email",
-            "url_names": ("account_email",),
         },
     ),
     MenuItem(
@@ -29,7 +26,6 @@ _items = [
         extra_context={
             "label": _("Password"),
             "icon": "password",
-            "url_names": ("account_change_password", "account_set_password"),
         },
     ),
 ]
@@ -42,7 +38,6 @@ if app_is_installed("allauth.socialaccount"):
             extra_context={
                 "label": _("Connected accounts"),
                 "icon": "social",
-                "url_names": ("socialaccount_",),
             },
         )
     )
@@ -55,7 +50,6 @@ if app_is_installed("allauth.mfa"):
             extra_context={
                 "label": _("Two-factor authentication"),
                 "icon": "mfa",
-                "url_names": ("mfa_",),
             },
         )
     )
@@ -68,7 +62,6 @@ if app_is_installed("allauth.usersessions"):
             extra_context={
                 "label": _("Sessions"),
                 "icon": "sessions",
-                "url_names": ("usersessions_",),
             },
         )
     )

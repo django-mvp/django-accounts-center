@@ -220,14 +220,15 @@ This is a reusable Django extension; consumers and upgrades come first.
   default behaviour stays stable across minor releases.
 - Verified compatibility ranges for third-party packages are recorded in `pyproject.toml` and
   updated whenever an integration changes.
-- The prebuilt stylesheet is rebuilt whenever templates change, so a consumer without a Tailwind
-  toolchain is never shipped stale CSS.
+- A consumer needs no front-end toolchain. The stylesheet is django-mvp's, so there is nothing
+  here to rebuild and nothing that can go stale against these templates.
 
 ### Article XVI — Stack norms
 Poetry-managed, Python ≥ 3.12, Django ≥ 5. Dev and test dependencies come from the
 `mvp-shared[dev,test]` bundle pinned to the family tag. Ruff owns lint and format for Python;
 djlint owns template formatting, and templates are never committed with djlint violations. The
-UI stack is Tailwind CSS v4 + DaisyUI 5 on the django-mvp app shell.
+UI stack is Tailwind CSS v4 + DaisyUI 5 on the django-mvp app shell, consumed through
+django-mvp's prebuilt stylesheet — there is no Node toolchain in this repository.
 
 ### Article XVII — Composition, not custom styling
 The visual layer belongs to django-mvp. This package composes mvp's cotton components and the
@@ -237,14 +238,15 @@ ship its own design decisions as CSS.
 - **A gap in mvp's component set is an issue on django-mvp**, not a bespoke component here. If a
   page cannot be built from what mvp offers, the answer is to say so upstream and wait, because
   a component written here serves one package and diverges from the family the day it lands.
-- **A rule in this package's stylesheet is a temporary workaround, never a decision.** Where one
-  has to ship before upstream lands, it carries a comment naming the issue it is waiting on and
-  is removed when that issue closes. Two exist today, both raised:
-  [django-mvp#124](https://github.com/django-mvp/django-mvp/issues/124) (inline links in body
-  copy) and [django-mvp#125](https://github.com/django-mvp/django-mvp/issues/125) (help-text
-  spacing).
-- The shipped `dac.css` is a **build** of the utilities this package's templates use, not a place
-  to put styles. Adding a rule to `assets/tailwind.css` is the thing this article governs.
+- **This package ships no stylesheet and no front-end build.** It had both, to carry two rules
+  waiting on upstream fixes; those landed, and the build went with them. A class used in a
+  template here has to be one django-mvp's own stylesheet already carries, which is the
+  constraint that keeps this article true rather than aspirational.
+- **A rule that has to ship before upstream lands has nowhere to go, and that is deliberate.**
+  Reintroducing a stylesheet to hold one is the decision this article exists to prevent. Raise it
+  upstream and compose around the gap until it closes.
+- `tests/test_architecture.py` enforces both: it fails on a `.css` file under the package, on a
+  `package.json` at the root, and on any template overriding `{% block styles %}`.
 
 Reviewers check this by asking where a class came from. A DaisyUI utility or an mvp component is
 fine. A name invented here is the thing to question.

@@ -10,8 +10,9 @@ added to PAGE_OVERRIDE_ALLOWLIST.
 
 import pathlib
 
-DAC_CORE_TEMPLATES = pathlib.Path(__file__).resolve().parent.parent / "dac" / "templates"
-DAC_ALLAUTH_TEMPLATES = pathlib.Path(__file__).resolve().parent.parent / "dac" / "allauth" / "templates"
+REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+DAC_CORE_TEMPLATES = REPO_ROOT / "dac" / "templates"
+DAC_ALLAUTH_TEMPLATES = REPO_ROOT / "dac" / "allauth" / "templates"
 
 # Per-page allauth template overrides dac is allowed to ship. Add entries
 # only when the element system genuinely cannot express the desired UX.
@@ -116,3 +117,42 @@ def test_core_entrance_templates_reference_no_integration():
             assert integration not in source, (
                 f"{path.relative_to(dac_root.parent)} references integration '{integration}'"
             )
+
+
+class TestVisualLayerBelongsToDjangoMvp:
+    """Constitution Article XVII, as a gate rather than a convention."""
+
+    def test_package_ships_no_stylesheet_or_frontend_build(self):
+        """The visual layer belongs to django-mvp (constitution Article XVII).
+
+        This package composes mvp's components and the DaisyUI utilities they are
+        built from, and ships neither CSS of its own nor a toolchain to produce
+        any. A stylesheet here would be a second place for a design decision to
+        live, and a build step would be a second toolchain for a consumer to
+        reason about.
+
+        The gate is the artefact, not the intent: a `.css` file under the package,
+        or a `package.json` at the root, is what a reviewer would otherwise have to
+        notice by eye.
+        """
+        stylesheets = sorted(p.relative_to(REPO_ROOT).as_posix() for p in (REPO_ROOT / "dac").rglob("*.css"))
+        assert stylesheets == [], f"this package ships CSS of its own: {stylesheets}"
+
+        for artefact in ("package.json", "package-lock.json", "assets"):
+            assert not (REPO_ROOT / artefact).exists(), (
+                f"{artefact} is back — the front-end build belongs to django-mvp"
+            )
+
+    def test_no_template_overrides_the_stylesheet_block(self):
+        """Every page reaches django-mvp's stylesheet by leaving `styles` alone.
+
+        Overriding that block without calling `block.super` is how a page ends up
+        with no stylesheet at all, and it renders as an unstyled page rather than
+        as an error — so nothing else would catch it.
+        """
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in (REPO_ROOT / "dac").rglob("*.html")
+            if "{% block styles %}" in path.read_text(encoding="utf-8")
+        ]
+        assert offenders == [], f"templates overriding the styles block: {offenders}"

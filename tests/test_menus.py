@@ -9,26 +9,35 @@ hides an item, is django-flex-menus' behaviour and is tested there.
 """
 
 import pytest
+from anytree import PreOrderIter
 from bs4 import BeautifulSoup
 from django.urls import reverse
+from flex_menu import root
+from mvp import menus as mvp_menus
+
+from dac import menus as dac_menus
 
 
 def _menu_labels(response):
     """The set of menu-entry labels rendered in the Account Center nav.
 
-    Every entry and group heading renders its label inside a ``<span>``
-    nested in an ``<li>`` within ``<aside aria-label="Account navigation">``
-    (mvp's ``cotton/menu/item.html`` and ``cotton/menu/group.html``) — one
-    ``aside`` holds both the mobile dropdown and the desktop card, so this
-    counts each label once regardless of which of the two render sites shows
-    it. The ``<li>`` filter excludes the mobile dropdown's own toggle button,
-    which also carries a ``<span>`` with the active section's label
-    (``dac/base.html``'s ``account_section`` mobile button) but is not itself
-    a menu entry.
+    Every entry and group heading renders its label inside a ``<span>`` nested
+    in an ``<li>`` (mvp's ``cotton/menu/item.html`` and
+    ``cotton/menu/group.html``), inside the ``<ul>`` that ``c-menu`` renders
+    with ``aria-label="Account navigation"``. django-mvp's account layout draws
+    that menu at two sites — a dropdown below the sidebar breakpoint and a card
+    above it — so both are collected and the set counts each label once. The
+    ``<li>`` filter keeps out the dropdown's own toggle, which carries a
+    ``<span>`` of its own without being a menu entry.
     """
     soup = BeautifulSoup(response.content, "html.parser")
-    aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-    return {span.get_text(strip=True) for span in aside.find_all("span") if span.find_parent("li")}
+    menus = soup.find_all(attrs={"aria-label": "Account navigation"})
+    return {
+        span.get_text(strip=True)
+        for menu in menus
+        for span in menu.find_all("span")
+        if span.find_parent("li")
+    }
 
 
 @pytest.mark.django_db
@@ -131,3 +140,29 @@ class TestPageUnaffectedByHiddenEntry:
         assert gated_messages is not None
         assert ungated_messages is not None
         assert str(gated_messages) == str(ungated_messages)
+
+
+class TestAccountCenterMenuIsSingular:
+    """django-mvp ships the Account Center menu; this package adds to it.
+
+    django-flex-menus holds every menu in one process-wide tree and looks one
+    up by name, refusing to answer when two share it. A second menu declared
+    here under the same name therefore does not shadow django-mvp's — it makes
+    the name unresolvable, and every page that renders the menu raises instead.
+    """
+
+    def test_the_name_resolves_to_exactly_one_menu(self):
+        """Looking the menu up by name answers, rather than raising because
+        two menus in the tree claim the name."""
+        assert root.get("AccountCenterMenu") is not None
+
+    def test_the_menu_this_package_uses_is_the_one_django_mvp_ships(self):
+        """Entries contributed here land on django-mvp's menu, so they show up
+        on the pages django-mvp renders from it."""
+        assert dac_menus.AccountCenterMenu is mvp_menus.AccountCenterMenu
+
+    def test_this_package_declares_no_menu_of_its_own_under_that_name(self):
+        """The whole tree holds one menu by that name, so no second
+        declaration can reappear here unnoticed."""
+        matches = [node for node in PreOrderIter(root) if node.name == "AccountCenterMenu"]
+        assert len(matches) == 1

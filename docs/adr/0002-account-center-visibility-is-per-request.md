@@ -56,9 +56,9 @@ django-flex-menus already owns, and that is not a layer worth carrying here. The
 alternative tempting are filed upstream (django-flex-menus #34 and #35), and a template-based
 breadcrumb is tracked on this repo's tracker.
 
-Cards are unchanged. The overview page still decides which cards to render from
-`app_is_installed()` alone, with no per-request check, so that half of this decision stays decided,
-not built. It is roadmap item R3's own feature.
+Cards are unchanged by this decision, and were settled separately when the landing page moved to
+django-mvp: a card is a block in that page's own render, so it sees the request and the person
+making it and decides for itself whether it applies. Both halves of R3 are done.
 
 The goal is G6. The work is R2 in the roadmap, in the Essential phase.
 

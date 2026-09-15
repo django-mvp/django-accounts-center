@@ -11,8 +11,9 @@ This package is not usable on its own. It renders on the django-mvp app shell
 
 - **An entrance layout.** Sign-in, sign-up and recovery pages render as a
   centered card with your site logo, outside the app shell.
-- **An Account Center.** A management layout, a sub menu, and an overview page
-  whose cards come from whatever you have installed.
+- **Account-management pages.** allauth's email, password, two-factor,
+  session and connected-account pages, rendered in django-mvp's Account
+  Center, with a card apiece on its landing page.
 - **An integration system.** The machinery that lets a third-party app add its
   own account-management pages to that Account Center.
 
@@ -26,18 +27,16 @@ INSTALLED_APPS = ["dac", "dac.allauth", ...]   # future: "dac.stripe", …
 ```
 
 From there the integration contributes its own labelled menu group, any
-overview cards it needs (through the `dac_overview_template` and
-`dac_overview_context` hooks on its `AppConfig`), and its template overrides.
-What is installed decides which contributions exist.
+overview cards it needs, and its template overrides. What is installed decides
+which contributions exist.
 
 Because every integration is gated, a project carries only the dependencies of
 the integrations it turns on. Installing this package pulls in nothing you have
 not enabled.
 
-Shipped today: `dac.allauth`, and it is the only one. Two limitations are worth
+Shipped today: `dac.allauth`, and it is the only one. One limitation is worth
 knowing before you write your own: an integration's URLs are still mounted by
-the core app rather than contributed by the integration, and menu entries and
-cards are decided once at startup rather than per visitor.
+the core app rather than contributed by the integration.
 
 ## The allauth integration
 
@@ -60,11 +59,12 @@ future allauth releases. On top of that it contributes overview cards for
 email, password, 2FA, sessions and connected accounts, and a menu group whose
 items appear only for the allauth apps you install.
 
-The core `dac` app adds the pieces that are not allauth's business: the Account
-Center overview page (`account-center` URL), the `AccountCenterMenu` the
-integrations append to, a `DAC_ICONS` easy-icons pack, and a prebuilt `dac.css`
-stylesheet. django-mvp's `<c-user.sidebar-menu>` picks up an "Account Center"
-entry and a POST logout form once the URLs are installed.
+The core `dac` app adds the pieces that are not allauth's business: the shared
+entrance page and its branded card, and a `DAC_ICONS` easy-icons pack. The
+`AccountCenterMenu` the integrations append to is django-mvp's, re-exported
+from `dac.menus` so either import reaches the same menu. django-mvp's
+`<c-user.sidebar-menu>` picks up an "Account Center" entry and a POST logout
+form once the URLs are installed.
 
 ## Scope
 
@@ -96,7 +96,7 @@ INSTALLED_APPS = [
     # ...
     "django.contrib.sites",
     "dac",
-    "dac.allauth",              # BEFORE allauth so template overrides win
+    "dac.allauth",              # BEFORE allauth and mvp so its template overrides win
     "mvp",
     "allauth",
     "allauth.account",
@@ -160,17 +160,22 @@ LOGIN_REDIRECT_URL = "/accounts/"
 
 ### 2. URLs
 
-dac's URLconf includes `allauth.urls` for you — mount it once:
+Two includes at the prefix of your choosing. django-mvp's URLconf carries the
+Account Center's landing page; dac's carries the pages your installed
+integrations serve, and includes `allauth.urls` for you:
 
 ```python
 urlpatterns = [
+    path("accounts/", include("mvp.urls")),
     path("accounts/", include("dac.urls")),
     # ...
 ]
 ```
 
-This registers the `account-center` overview page at `/accounts/` plus all of
-allauth's URLs (`/accounts/login/`, `/accounts/email/`, `/accounts/2fa/`, …).
+That puts the landing page at `/accounts/` under the name `account-center`,
+plus all of allauth's URLs (`/accounts/login/`, `/accounts/email/`,
+`/accounts/2fa/`, …). The prefix is yours to choose — django-mvp does not fix
+it, and nothing here does either.
 
 ### 3. Migrate
 
@@ -194,15 +199,16 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   `{% block entrance %}` instead, wrapping `<c-dac.entrance size="full">`
   around your `{% block content %}` — the content block moves inside the
   override, because a template can declare a block only once. The default
-  width and `full` are the only two until
-  [django-mvp#126](https://github.com/django-mvp/django-mvp/issues/126)
-  widens the underlying component.
+  width and `full` are the only two this package offers so far; django-mvp's
+  component now carries a full scale, and adopting it is
+  [#20](https://github.com/django-mvp/django-accounts-center/issues/20).
 - **Sub menu**: append items (or a labelled `mvp.menus.MenuGroup`) to
   `dac.menus.AccountCenterMenu` from your own `menus.py` (e.g. a profile-edit
-  page). Items may declare `url_names` prefixes in `extra_context` so
-  breadcrumbs resolve their sub-pages.
-- **Overview page**: subclass `dac.views.AccountCenterView` and point the
-  `account-center` URL at it, or override `dac/account_center.html`.
+  page). That menu is django-mvp's, re-exported here.
+- **Overview page**: it is django-mvp's, and so is the way to add to it — ship
+  your own `mvp/account/overview.html` extending that same name and add to its
+  card block. Point the `account-center` URL at your own subclass of
+  `mvp.views.AccountCenterView` if the page itself needs to differ.
 - **Social login icons**: `dac.allauth` ships brand SVGs for the major
   providers (Google, GitHub, Microsoft, Apple, Facebook, X, LinkedIn, GitLab,
   Discord, ORCID) in its `icons/` template dir. Register them under a
@@ -211,10 +217,10 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   `{% icon provider_id renderer="svg" %}`, so a provider without a registered
   icon raises `IconNotFound` (caught in development, not shipped broken), and
   any icon is overridable via your `EASY_ICONS` config or a template shadow.
-- **Styling**: dac ships a prebuilt `dac.css` (Tailwind v4 + DaisyUI 5 over
-  both mvp's and dac's templates). If your project runs its own Tailwind
-  build, add dac's templates as a source alongside mvp's (see
-  `assets/tailwind.css`) and override the `styles` block.
+- **Styling**: there is nothing here to style. The stylesheet is django-mvp's,
+  and this package composes its components and the DaisyUI utilities behind
+  them rather than shipping CSS of its own. Restyle through django-mvp's
+  theming, or through the allauth element overrides above.
 
 ## Development
 
@@ -222,13 +228,9 @@ reach the Account Center from the user menu at the bottom of the sidebar.
 git clone https://github.com/SamuelJennings/django-accounts-center.git
 cd django-accounts-center
 poetry install
-npm install
 
 # run the example project
 python manage.py runserver
-
-# rebuild the shipped stylesheet after template changes
-npm run build:css
 
 # tests
 pytest
