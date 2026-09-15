@@ -13,13 +13,13 @@ are recorded in `GOALS.md`.
 
 ## Stack & commands
 
-- **Stack:** Python ≥ 3.12 / Django ≥ 5, Poetry-managed. Tailwind CSS v4 + DaisyUI 5 on django-mvp.
-- **Install:** `poetry install && npm install`
+- **Stack:** Python ≥ 3.12 / Django ≥ 5, Poetry-managed. No front-end build: the stylesheet is
+  django-mvp's, and this package composes its components and the DaisyUI utilities behind them.
+- **Install:** `poetry install`
 - **Test:** `poetry run pytest`
 - **Lint:** `poetry run ruff check .` (templates: `poetry run djlint .`)
 - **Type-check:** `poetry run mypy .`
 - **Build:** `poetry build`
-- **Stylesheet:** `npm run build:css` — rebuild `dac/static/css/dac.css` after template changes
 - **Screenshots (on demand, not a gate):** `poetry run pytest screenshots/`
 
 ## Agent skills

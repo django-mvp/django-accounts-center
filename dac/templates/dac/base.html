@@ -1,5 +1,6 @@
 {% extends "mvp/base.html" %}
-{% load i18n flex_menu static %}
+{% load i18n flex_menu %}
+
 {% comment %}
   Account Center pages: the normal mvp app shell with the area's navigation
   beside the content.
@@ -24,19 +25,18 @@
     {% trans "Account Center" %}
   {% endblock head_title %}
 {% endblock title %}
+
 {% block head %}
   {{ block.super }}
   {% block extra_head %}
   {% endblock extra_head %}
 {% endblock head %}
-{% block styles %}
-  <link rel="stylesheet" href="{% static 'css/dac.css' %}" />
-{% endblock styles %}
+
 {% block app.main %}
   <c-app.main>
     <div class="container mx-auto px-4 py-4 lg:py-6">
       <div class="flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
-        <aside class="w-full lg:w-65 lg:shrink-0"
+        <aside class="w-full lg:w-1/4 lg:shrink-0"
                aria-label="{% trans "Account navigation" %}">
           {% block account_menu %}
             {% comment %}
@@ -57,9 +57,7 @@
               </c-slot>
               {% render_menu "AccountCenterMenu" renderer="sidebar" %}
             </c-dropdown>
-            <div class="hidden lg:block card bg-base-200 p-2">
-              {% render_menu "AccountCenterMenu" renderer="sidebar" %}
-            </div>
+            <div class="hidden lg:block card bg-base-200 p-2">{% render_menu "AccountCenterMenu" renderer="sidebar" %}</div>
           {% endblock account_menu %}
         </aside>
         <div class="grow min-w-0 max-w-3xl">
@@ -71,6 +69,7 @@
     <c-messages :messages="messages" dismissible />
   </c-app.main>
 {% endblock app.main %}
+
 {% block extra_js %}
   {% block extra_body %}
   {% endblock extra_body %}

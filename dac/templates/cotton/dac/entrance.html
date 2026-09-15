@@ -1,18 +1,20 @@
-{% load i18n mvp %}<c-vars size="sm" />
+{% load i18n %}
+
+<c-vars size="sm" />
 {% comment %}
   The card for anonymous-facing pages: mvp's <c-entrance> with the site logo
   above the slot.
 
+  The logo is mvp's own <c-brand.logo>, which resolves the project's asset and
+  sizes it to the card. It used to be a hand-built <img> with a fixed height
+  class, which only rendered because this package shipped a stylesheet of its
+  own containing that class.
+
   `size` maps onto mvp's `small` boolean, which is the entire width vocabulary
   <c-entrance> has today. "full" unsets it; every other value, recognised or
-  not, falls through to the default width. Widening the range waits on
-  django-mvp#126 upstream, adopted here via #20.
+  not, falls through to the default width. Widening the range is #20.
 {% endcomment %}
 <c-entrance small="{% if size != 'full' %}1{% endif %}">
-  <img src="{% logo_url "md" %}"
-       alt="{% trans "Site Logo" %}"
-       width="auto"
-       height="auto"
-       class="h-34 w-auto max-w-full mb-4 mx-auto" />
+  <c-brand.logo max-height="md" class="mb-4" />
   {{ slot }}
 </c-entrance>

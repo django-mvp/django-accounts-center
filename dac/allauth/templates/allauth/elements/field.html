@@ -1,4 +1,5 @@
 {% load allauth %}
+
 {% comment %}
   Single hand-built field (allauth uses this directly for e.g. the email
   radio list and verification-code inputs; whole forms go through
@@ -61,11 +62,11 @@
   </div>
 {% endif %}
 {% if slots.help_text %}
-  <p class="text-xs text-base-content/60 -mt-2">
+  <c-text size="xs" muted tight>
     {% slot help_text %}
     {% endslot %}
-  </p>
+  </c-text>
 {% endif %}
 {% if attrs.errors %}
-  <div class="dac-errors text-error text-sm -mt-2">{{ attrs.errors }}</div>
+  <div class="text-error text-sm">{{ attrs.errors }}</div>
 {% endif %}

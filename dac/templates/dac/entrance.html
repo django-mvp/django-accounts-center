@@ -1,20 +1,15 @@
 {% extends "mvp/base.html" %}
-{% load static %}
-
 {% comment %}
   Shared entrance page for anonymous-facing pages: the core package's
   extension point for any integration's login, signup, password reset and
   similar pages. An extending page reaches this with a bare {% extends %}
   and fills {% block content %}, and gets the full-screen background, the
-  centered card, the site logo, the package stylesheet and the messages
-  region for free.
+  centered card, the site logo and the messages region for free.
+
+  The stylesheet is django-mvp's, and arrives through mvp/base.html. This
+  template used to override the styles block to load one of its own; there is
+  no longer one to load.
 {% endcomment %}
-
-{% block styles %}
-  <link rel="stylesheet"
-        href="{% static 'css/dac.css' %}" />
-{% endblock styles %}
-
 {% block app %}
   <c-messages :messages="messages" dismissible />
   {% block entrance %}

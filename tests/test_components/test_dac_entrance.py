@@ -47,11 +47,16 @@ class TestEntrancePageBlockContract:
         assert el.get_text(strip=True) == "Hello"
 
     def test_stylesheet_link_present(self, cotton_render_string_soup):
-        """The entrance page itself carries the package stylesheet, so an
-        extending page never has to know about it (FR-009)."""
+        """The entrance page carries a stylesheet, so an extending page never
+        has to know about one (FR-009).
+
+        It is django-mvp's, reached by leaving the styles block alone. This
+        package ships none of its own, and overriding that block by mistake is
+        how a page would end up with no stylesheet at all."""
         soup = cotton_render_string_soup(_ENTRANCE)
-        links = soup.find_all("link", rel="stylesheet")
-        assert any("dac.css" in (link.get("href") or "") for link in links)
+        hrefs = [link.get("href") or "" for link in soup.find_all("link", rel="stylesheet")]
+        assert any("django-mvp.css" in href for href in hrefs)
+        assert not any("dac.css" in href for href in hrefs)
 
     def test_messages_region_present(self, cotton_render_string_soup):
         """mvp's <c-messages> toast region renders even with no messages

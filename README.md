@@ -59,12 +59,12 @@ future allauth releases. On top of that it contributes overview cards for
 email, password, 2FA, sessions and connected accounts, and a menu group whose
 items appear only for the allauth apps you install.
 
-The core `dac` app adds the pieces that are not allauth's business: the Account
-Center overview page (`account-center` URL), a `DAC_ICONS` easy-icons pack, and
-a prebuilt `dac.css` stylesheet. The `AccountCenterMenu` the integrations append
-to is django-mvp's, re-exported from `dac.menus` so either import reaches the
-same menu. django-mvp's `<c-user.sidebar-menu>` picks up an "Account Center"
-entry and a POST logout form once the URLs are installed.
+The core `dac` app adds the pieces that are not allauth's business: the shared
+entrance page and its branded card, and a `DAC_ICONS` easy-icons pack. The
+`AccountCenterMenu` the integrations append to is django-mvp's, re-exported
+from `dac.menus` so either import reaches the same menu. django-mvp's
+`<c-user.sidebar-menu>` picks up an "Account Center" entry and a POST logout
+form once the URLs are installed.
 
 ## Scope
 
@@ -199,9 +199,9 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   `{% block entrance %}` instead, wrapping `<c-dac.entrance size="full">`
   around your `{% block content %}` — the content block moves inside the
   override, because a template can declare a block only once. The default
-  width and `full` are the only two until
-  [django-mvp#126](https://github.com/django-mvp/django-mvp/issues/126)
-  widens the underlying component.
+  width and `full` are the only two this package offers so far; django-mvp's
+  component now carries a full scale, and adopting it is
+  [#20](https://github.com/django-mvp/django-accounts-center/issues/20).
 - **Sub menu**: append items (or a labelled `mvp.menus.MenuGroup`) to
   `dac.menus.AccountCenterMenu` from your own `menus.py` (e.g. a profile-edit
   page). That menu is django-mvp's, re-exported here.
@@ -217,10 +217,10 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   `{% icon provider_id renderer="svg" %}`, so a provider without a registered
   icon raises `IconNotFound` (caught in development, not shipped broken), and
   any icon is overridable via your `EASY_ICONS` config or a template shadow.
-- **Styling**: dac ships a prebuilt `dac.css` (Tailwind v4 + DaisyUI 5 over
-  both mvp's and dac's templates). If your project runs its own Tailwind
-  build, add dac's templates as a source alongside mvp's (see
-  `assets/tailwind.css`) and override the `styles` block.
+- **Styling**: there is nothing here to style. The stylesheet is django-mvp's,
+  and this package composes its components and the DaisyUI utilities behind
+  them rather than shipping CSS of its own. Restyle through django-mvp's
+  theming, or through the allauth element overrides above.
 
 ## Development
 
@@ -228,13 +228,9 @@ reach the Account Center from the user menu at the bottom of the sidebar.
 git clone https://github.com/SamuelJennings/django-accounts-center.git
 cd django-accounts-center
 poetry install
-npm install
 
 # run the example project
 python manage.py runserver
-
-# rebuild the shipped stylesheet after template changes
-npm run build:css
 
 # tests
 pytest

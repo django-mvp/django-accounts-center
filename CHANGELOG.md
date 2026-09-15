@@ -40,6 +40,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   template loader never reaches its copy. A project that subclassed
   `dac.views.AccountCenterView` subclasses `mvp.views.AccountCenterView`.
 
+- **BREAKING: the stylesheet and the front-end build that produced it.**
+  `dac/static/css/dac.css`, `assets/tailwind.css`, `package.json` and its lock
+  file are gone, and so is the Node toolchain. The visual layer belongs to
+  django-mvp, and this package now composes its components and the DaisyUI
+  utilities behind them rather than shipping CSS of its own.
+
+  The build existed to carry two rules waiting on upstream fixes. Both landed,
+  so both rules went: inline links in allauth's body copy are styled by
+  django-mvp's `prose`, which takes its colours from the active theme, and the
+  help-text spacing is django-mvp's own.
+
+  **On upgrade**, nothing, unless your project linked `css/dac.css` itself or
+  overrode `{% block styles %}` to load it. Every page reaches django-mvp's
+  stylesheet by leaving that block alone. A project running its own Tailwind
+  build no longer needs this package's templates as a source, because it
+  introduces no class django-mvp's stylesheet does not already carry.
+
+  The package also stopped shipping `dac/static/brand/`, which held a logo and
+  an icon that nothing referenced and that shadowed django-mvp's own — an app
+  listed before `mvp` wins the static path, so installing this package quietly
+  replaced a project's brand mark.
+
 - **BREAKING: the breadcrumb trail on Account Center pages, and everything
   behind it.** `dac.menus.get_active_section`, the `{% account_section %}`
   tag, the trail the layout drew, and the `url_names` entries in a menu item's

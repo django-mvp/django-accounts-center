@@ -1,5 +1,6 @@
 {% extends "mvp/account/overview.html" %}
 {% load i18n dac_allauth %}
+
 {% comment %}
   The allauth cards on the Account Center's landing page.
 
@@ -36,13 +37,19 @@
           <c-badge size="sm" text="{% trans "Primary" %}" />
         {% endif %}
         {% if emailaddress.verified %}
-          <c-badge variant="success" size="sm" text="{% trans "Verified" %}" />
+          <c-badge variant="success"
+                   size="sm"
+                   text="{% trans "Verified" %}" />
         {% else %}
-          <c-badge variant="warning" size="sm" text="{% trans "Unverified" %}" />
+          <c-badge variant="warning"
+                   size="sm"
+                   text="{% trans "Unverified" %}" />
         {% endif %}
       </div>
     {% empty %}
-      <c-text size="sm" muted text="{% trans "No email address on record." %}" />
+      <c-text size="sm"
+              muted
+              text="{% trans "No email address on record." %}" />
     {% endfor %}
     <c-slot name="footer">
       <c-button size="sm"
@@ -54,7 +61,9 @@
   </c-card>
   <c-card title="{% trans "Password" %}" icon="password">
     {% if account.has_password %}
-      <c-text size="sm" muted text="{% trans "A password is set for your account." %}" />
+      <c-text size="sm"
+              muted
+              text="{% trans "A password is set for your account." %}" />
     {% else %}
       <c-text size="sm"
               muted
@@ -77,14 +86,17 @@
     </c-slot>
   </c-card>
   {% if account.social %}
-    <c-card title="{% trans "Connected accounts" %}" icon="social">
+    <c-card title="{% trans "Connected accounts" %}"
+            icon="social">
       {% for socialaccount in account.social.accounts %}
         <div class="flex items-center gap-2 text-sm">
           <span>{{ socialaccount.get_provider.name }}</span>
           <span class="text-base-content/60 truncate">{{ socialaccount }}</span>
         </div>
       {% empty %}
-        <c-text size="sm" muted text="{% trans "No third-party accounts connected." %}" />
+        <c-text size="sm"
+                muted
+                text="{% trans "No third-party accounts connected." %}" />
       {% endfor %}
       <c-slot name="footer">
         <c-button size="sm"
@@ -96,12 +108,17 @@
     </c-card>
   {% endif %}
   {% if account.mfa %}
-    <c-card title="{% trans "Two-factor authentication" %}" icon="mfa">
+    <c-card title="{% trans "Two-factor authentication" %}"
+            icon="mfa">
       <c-slot name="badges">
         {% if account.mfa.enabled %}
-          <c-badge variant="success" size="sm" text="{% trans "Enabled" %}" />
+          <c-badge variant="success"
+                   size="sm"
+                   text="{% trans "Enabled" %}" />
         {% else %}
-          <c-badge variant="warning" size="sm" text="{% trans "Disabled" %}" />
+          <c-badge variant="warning"
+                   size="sm"
+                   text="{% trans "Disabled" %}" />
         {% endif %}
       </c-slot>
       {% if account.mfa.enabled %}

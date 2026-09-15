@@ -109,7 +109,7 @@ sign-in codes. Renders as a centered card with the site logo and no app shell.
 The core package owns it, in two files:
 
 - `dac/templates/dac/entrance.html` — the page an app extends. Carries the mvp
-  base shell, the stylesheet link, the messages region and `{% block content %}`
+  base shell, the messages region and `{% block content %}`
 - `dac/templates/cotton/dac/entrance.html` — the `<c-dac.entrance>` component:
   mvp's `<c-entrance>` card with the site logo above the slot
 
@@ -181,12 +181,14 @@ Distinct from the **provider icons** in
 rendered by `provider.html` through a django-easy-icons `"svg"` renderer keyed by
 allauth's provider id.
 
-## Prebuilt stylesheet
+## Stylesheet
 
-`dac/static/css/dac.css`, the Tailwind v4 + DaisyUI 5 build shipped inside the
-package so a consuming project needs no Tailwind toolchain of its own. Built from
-`assets/tailwind.css` by `npm run build:css`, and rebuilt whenever templates
-change.
+django-mvp's, and the only one. This package ships no CSS and no build to
+produce any: it composes mvp's components and the DaisyUI utilities behind
+them, so a class used here has to be one mvp's own stylesheet already carries
+(constitution Article XVII).
 
-A project running its own Tailwind build adds this package's templates as a
-source instead, and overrides the `styles` block.
+Every page reaches it by leaving `{% block styles %}` alone.
+`tests/test_architecture.py` fails on a `.css` file under the package, on a
+`package.json` at the root, and on any template overriding that block — an
+unstyled page is not an error, so nothing else would notice.
