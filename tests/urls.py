@@ -45,8 +45,11 @@ def _reauthenticate_with_alternatives_view(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # dac.urls includes allauth.urls, so mounting allauth separately would
-    # register every allauth URL name twice and resolve by last registration.
+    # The landing page is django-mvp's, mounted from mvp.urls; dac.urls adds
+    # the installed integrations' pages at the same prefix. dac.urls includes
+    # allauth.urls, so mounting allauth separately would register every allauth
+    # URL name twice and resolve by last registration.
+    path("account-center/", include("mvp.urls")),
     path("account-center/", include("dac.urls")),
     # Test-only URLs — not part of the production URL configuration
     path("test/testapp/", include("tests.testapp.urls")),

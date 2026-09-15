@@ -1,0 +1,147 @@
+{% extends "mvp/account/overview.html" %}
+{% load i18n dac dac_allauth %}
+{% comment %}
+  The allauth cards on the Account Center's landing page.
+
+  This extends the template name it is itself saved under. Django resolves that
+  to the next template of the name along the loader path rather than back to
+  this file, so several apps can each ship one and chain through
+  {{ block.super }}, ending at django-mvp's own copy. For this one to be
+  reached at all, "dac.allauth" must come before "mvp" in INSTALLED_APPS: the
+  loader returns the first match, and an app listed after mvp never renders.
+
+  Every card reads what it needs off `user`, which the surrounding page already
+  has — the block shares that page's context rather than receiving one of its
+  own. There is no view behind these cards and nothing passed to them.
+
+  Three of the five are for separately installable allauth apps, so each asks
+  whether its app is present before drawing. That is not the same question as
+  whether the person has anything: "this project has no social login" and "you
+  have connected no accounts" are different sentences.
+
+  Each card binds its queryset once with {% with %} and reads it twice from
+  there. A related manager hands back a new queryset every time it is asked, so
+  naming it once is the difference between one query and two.
+{% endcomment %}
+{% block account.cards %}
+  {{ block.super }}
+  {% with addresses=user.emailaddress_set.all %}
+    <c-card title="{% trans "Email" %}" icon="email">
+      <c-slot name="badges">
+        {% with unverified=addresses|unverified_count %}
+          {% if unverified %}
+            <c-badge variant="warning"
+                     size="sm"
+                     text="{% blocktrans count n=unverified %}{{ n }} unverified{% plural %}{{ n }} unverified{% endblocktrans %}" />
+          {% endif %}
+        {% endwith %}
+      </c-slot>
+      {% for emailaddress in addresses %}
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <span class="truncate">{{ emailaddress.email }}</span>
+          {% if emailaddress.primary %}
+            <c-badge size="sm" text="{% trans "Primary" %}" />
+          {% endif %}
+          {% if emailaddress.verified %}
+            <c-badge variant="success" size="sm" text="{% trans "Verified" %}" />
+          {% else %}
+            <c-badge variant="warning" size="sm" text="{% trans "Unverified" %}" />
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-sm text-base-content/60">{% trans "No email address on record." %}</p>
+      {% endfor %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="email"
+                  href="{% url 'account_email' %}"
+                  text="{% trans "Manage email" %}" />
+      </c-slot>
+    </c-card>
+  {% endwith %}
+  <c-card title="{% trans "Password" %}" icon="password">
+    {% if user.has_usable_password %}
+      <p class="text-sm text-base-content/60">{% trans "A password is set for your account." %}</p>
+    {% else %}
+      <p class="text-sm text-base-content/60">
+        {% trans "You have no password set. You sign in via a third-party account, code or passkey." %}
+      </p>
+    {% endif %}
+    <c-slot name="footer">
+      {% if user.has_usable_password %}
+        <c-button size="sm"
+                  variant="primary"
+                  icon="password_change"
+                  href="{% url 'account_change_password' %}"
+                  text="{% trans "Change password" %}" />
+      {% else %}
+        <c-button size="sm"
+                  variant="primary"
+                  icon="password_change"
+                  href="{% url 'account_change_password' %}"
+                  text="{% trans "Set password" %}" />
+      {% endif %}
+    </c-slot>
+  </c-card>
+  {% if "allauth.socialaccount"|app_is_installed %}
+    <c-card title="{% trans "Connected accounts" %}" icon="social">
+      {% for account in user.socialaccount_set.all %}
+        <div class="flex items-center gap-2 text-sm">
+          <span>{{ account.get_provider.name }}</span>
+          <span class="text-base-content/60 truncate">{{ account }}</span>
+        </div>
+      {% empty %}
+        <p class="text-sm text-base-content/60">{% trans "No third-party accounts connected." %}</p>
+      {% endfor %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="social"
+                  href="{% url 'socialaccount_connections' %}"
+                  text="{% trans "Manage connections" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+  {% if "allauth.mfa"|app_is_installed %}
+    <c-card title="{% trans "Two-factor authentication" %}" icon="mfa">
+      {% with enabled=user.authenticator_set.all|has_second_factor %}
+        <c-slot name="badges">
+          {% if enabled %}
+            <c-badge variant="success" size="sm" text="{% trans "Enabled" %}" />
+          {% else %}
+            <c-badge variant="warning" size="sm" text="{% trans "Disabled" %}" />
+          {% endif %}
+        </c-slot>
+        {% if enabled %}
+          <p class="text-sm text-base-content/60">{% trans "Your account is protected by two-factor authentication." %}</p>
+        {% else %}
+          <p class="text-sm text-base-content/60">{% trans "Add a second factor to make your account more secure." %}</p>
+        {% endif %}
+      {% endwith %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="mfa"
+                  href="{% url 'mfa_index' %}"
+                  text="{% trans "Manage 2FA" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+  {% if "allauth.usersessions"|app_is_installed %}
+    <c-card title="{% trans "Sessions" %}" icon="sessions">
+      {% with count=user.usersession_set.count %}
+        <p class="text-sm text-base-content/60">
+          {% blocktrans count n=count %}{{ n }} active session{% plural %}{{ n }} active sessions{% endblocktrans %}
+        </p>
+      {% endwith %}
+      <c-slot name="footer">
+        <c-button size="sm"
+                  variant="primary"
+                  icon="sessions"
+                  href="{% url 'usersessions_list' %}"
+                  text="{% trans "Manage sessions" %}" />
+      </c-slot>
+    </c-card>
+  {% endif %}
+{% endblock account.cards %}

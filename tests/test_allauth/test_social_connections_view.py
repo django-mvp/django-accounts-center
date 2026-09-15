@@ -2,7 +2,7 @@
 Integration tests for the allauth social account connections flow.
 
 Covers:
-  - T003 / US1: connections.html renders inside the DAC layout (sidebar, breadcrumbs, card-stack)
+  - T003 / US1: connections.html renders inside the DAC layout (sidebar, card-stack)
   - T007 / US2: connections.html handles has-accounts and empty-state branches correctly;
     authentication_error.html uses Cotton components (no element tags)
   - T011 / US3: Edge cases — multiple accounts same provider, no providers configured,
@@ -82,8 +82,8 @@ class TestConnectionsLayoutAndStructure:
         content = response.content.decode()
         assert "Account navigation" in content
 
-    def test_breadcrumb_account_connections_present(self, client):
-        """Rendered HTML must contain the 'Account Connections' breadcrumb leaf."""
+    def test_account_connections_heading_present(self, client):
+        """Rendered HTML must name the page 'Account Connections'."""
         user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))
@@ -91,7 +91,7 @@ class TestConnectionsLayoutAndStructure:
         assert "Account Connections" in content
 
     def test_content_in_page_content_block(self, client):
-        """Rendered HTML must contain 'Account Center' root breadcrumb (DAC base layout)."""
+        """The page renders inside the Account Center, whose navigation names it."""
         user = UserFactory()
         client.force_login(user)
         response = client.get(reverse("socialaccount_connections"))

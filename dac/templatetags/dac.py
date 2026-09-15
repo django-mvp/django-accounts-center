@@ -1,20 +1,24 @@
 """Template tags for django-accounts-center."""
 
 from django import template
+from mvp.utils import app_is_installed as _app_is_installed
 
 register = template.Library()
 
 
-@register.simple_tag(takes_context=True)
-def account_section(context):
-    """Resolve the active Account Center section for breadcrumb rendering.
+@register.filter
+def app_is_installed(app_name):
+    """Whether ``app_name`` is in ``INSTALLED_APPS``.
 
-    Usage: ``{% account_section as section %}`` — see
-    :func:`dac.menus.get_active_section` for the return shape.
+    Usage: ``{% if "allauth.mfa"|app_is_installed %}``.
+
+    An overview card has to tell "this project has no two-factor app" from
+    "this person has not set one up" — different sentences, and only one of
+    them belongs on the page. A card is a template block with no view behind
+    it, so the question has to be answerable from a template.
+
+    django-mvp owns this: the function being wrapped is its own, and it is
+    asked for there at django-mvp/django-mvp#355. This wrapper goes when that
+    lands.
     """
-    from dac.menus import get_active_section
-
-    request = context.get("request")
-    if request is None:
-        return None
-    return get_active_section(request)
+    return _app_is_installed(app_name)

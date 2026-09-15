@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **BREAKING: this package no longer provides an Account Center.** django-mvp
+  0.22 ships one — a landing page, a layout, a menu any installed app can add
+  to, and an includable URLconf — and this package now fills that in rather
+  than keeping a second version of it. What it still authors is the part
+  django-mvp has no business knowing about: the allauth management pages, the
+  branded entrance card, and its icon pack.
+
+  Gone with it: `dac.views.AccountCenterView` and the `dac/account_center.html`
+  it rendered, the `account-center` route in `dac.urls`, and the
+  `dac_overview_template` / `dac_overview_context` pair on `AppConfig`.
+
+  **On upgrade**, mount django-mvp's URLconf beside this package's, at the same
+  prefix — the prefix is yours to choose, and django-mvp leaves it that way on
+  purpose:
+
+  ```python
+  urlpatterns = [
+      path("accounts/", include("mvp.urls")),
+      path("accounts/", include("dac.urls")),
+  ]
+  ```
+
+  An app contributing an overview card stops declaring those two `AppConfig`
+  attributes and ships its own `mvp/account/overview.html` instead, extending
+  that same name and adding to `{% block account.cards %}` through
+  `{{ block.super }}`. A card is a block in the page's own render, so `user`
+  and the request are already in scope and nothing is passed to it. The
+  contributing app must be listed **before `mvp`** in `INSTALLED_APPS`, or the
+  template loader never reaches its copy. A project that subclassed
+  `dac.views.AccountCenterView` subclasses `mvp.views.AccountCenterView`.
+
+- **BREAKING: the breadcrumb trail on Account Center pages, and everything
+  behind it.** `dac.menus.get_active_section`, the `{% account_section %}`
+  tag, the trail the layout drew, and the `url_names` entries in a menu item's
+  `extra_context` that existed only to feed it. A menu entry that still
+  declares `url_names` is simply ignored. Nothing replaces this here.
+
 ### Fixed
 
 - **Every Account Center page raised when this package was installed alongside
@@ -33,6 +72,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `BS5_ICONS` ships both, mapped to the same glyphs this pack used, and a name
   in both packs is reported as a collision. Either name still resolves and
   nothing on a page changes.
+
+- **The management pages keep a layout of this package's own, for now.** They
+  should render through django-mvp's account layout like everything else, and
+  cannot yet: that layout builds itself inside `{% block content %}`, and
+  allauth's stock templates all fill that same block. Django treats a nested
+  block in a child as an override, so routing an allauth page through the
+  layout drops the navigation panel beside it — on a page that still returns
+  200, which is the worst way for it to fail. Raised at
+  [django-mvp#358](https://github.com/django-mvp/django-mvp/issues/358), and
+  `dac/base.html` goes when it closes.
+
+### Added
+
+- `{{ "some.app"|app_is_installed }}`, a template filter, so a card can tell
+  "this project does not have that app" from "you have nothing there yet".
+  django-mvp owns the function behind it and is asked for the filter at
+  [django-mvp#355](https://github.com/django-mvp/django-mvp/issues/355); this
+  copy goes when that lands.
 
 ## [v0.7.1] - 2026-08-06
 

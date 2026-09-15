@@ -21,19 +21,23 @@ from dac import menus as dac_menus
 def _menu_labels(response):
     """The set of menu-entry labels rendered in the Account Center nav.
 
-    Every entry and group heading renders its label inside a ``<span>``
-    nested in an ``<li>`` within ``<aside aria-label="Account navigation">``
-    (mvp's ``cotton/menu/item.html`` and ``cotton/menu/group.html``) — one
-    ``aside`` holds both the mobile dropdown and the desktop card, so this
-    counts each label once regardless of which of the two render sites shows
-    it. The ``<li>`` filter excludes the mobile dropdown's own toggle button,
-    which also carries a ``<span>`` with the active section's label
-    (``dac/base.html``'s ``account_section`` mobile button) but is not itself
-    a menu entry.
+    Every entry and group heading renders its label inside a ``<span>`` nested
+    in an ``<li>`` (mvp's ``cotton/menu/item.html`` and
+    ``cotton/menu/group.html``), inside the ``<ul>`` that ``c-menu`` renders
+    with ``aria-label="Account navigation"``. django-mvp's account layout draws
+    that menu at two sites — a dropdown below the sidebar breakpoint and a card
+    above it — so both are collected and the set counts each label once. The
+    ``<li>`` filter keeps out the dropdown's own toggle, which carries a
+    ``<span>`` of its own without being a menu entry.
     """
     soup = BeautifulSoup(response.content, "html.parser")
-    aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-    return {span.get_text(strip=True) for span in aside.find_all("span") if span.find_parent("li")}
+    menus = soup.find_all(attrs={"aria-label": "Account navigation"})
+    return {
+        span.get_text(strip=True)
+        for menu in menus
+        for span in menu.find_all("span")
+        if span.find_parent("li")
+    }
 
 
 @pytest.mark.django_db

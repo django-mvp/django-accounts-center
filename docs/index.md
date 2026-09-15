@@ -11,8 +11,9 @@ Tailwind CSS v4 + django-cotton) and expects it.
 
 - **An entrance layout.** Sign-in, sign-up and recovery pages render as a centered card with your
   site logo, outside the app shell.
-- **An Account Center.** A management layout, a sub menu, and an overview page whose cards come
-  from whatever you have installed.
+- **Account-management pages.** allauth's email, password, two-factor, session and
+  connected-account pages, rendered in django-mvp's Account Center, with a card apiece on its
+  landing page.
 - **An integration system.** The machinery that lets a third-party app add its own
   account-management pages to that Account Center.
 
@@ -56,7 +57,6 @@ AccountCenterMenu.append(
                 view_name="team_settings",
                 extra_context={
                     "label": "Settings",
-                    "url_names": ("team_settings", "team_member_"),
                 },
                 check=_has_a_team,
             ),
@@ -74,11 +74,6 @@ A few things to know before you write one:
 - Hiding is presentation only. Whether an entry shows in the menu and whether its page may be
   opened are separate questions — the URL still resolves whether or not the current person's menu
   shows the entry leading to it, so your view still owns who may open it.
-- List your sub-pages' URL-name prefixes in `url_names` if the section has pages below its root.
-  A page whose URL name starts with one of them is named as belonging to that section, so it gets
-  the section's breadcrumb and, on a narrow screen, the section's name on the menu button. Leave
-  `url_names` off and only the section root itself is recognised. A section whose entry is hidden
-  from the current person is not named for them — breadcrumbs follow the menu they actually get.
 
 ## Installation
 
@@ -88,3 +83,8 @@ pip install django-accounts-center[allauth]
 
 Settings, URLs and customisation are covered in the
 [README](https://github.com/django-mvp/django-accounts-center#installation).
+
+## Where this is going
+
+[ROADMAP.md](ROADMAP.md) records what is built, what is next, and which parts of the Account
+Center belong to django-mvp rather than to this package.

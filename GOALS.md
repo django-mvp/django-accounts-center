@@ -18,8 +18,8 @@ makes the package incomplete.
 | G1 | **Zero-wiring integration** — an integration is enabled by adding its app to `INSTALLED_APPS` and nothing else. Its menu, card, and views appear on their own. | Essential | | |
 | G2 | **A shared entrance layout** — sign-in, sign-up, and recovery share one branded layout that no integration reimplements. | Essential | | |
 | G3 | **A shared management layout** — every account-management page an integration serves looks and behaves the same. | Essential | | |
-| G4 | **A pluggable account dashboard** — one overview that assembles itself from whichever integrations are active. | Essential | | |
-| G5 | **One address for account management** — every integration's management views live beneath a single predictable path. | Essential | | |
+| G4 | **A pluggable account dashboard** — one overview that assembles itself from whichever integrations are active. | Essential | | django-mvp provides the page and the mechanism; this package contributes cards to it. |
+| G5 | **One address for account management** — every integration's management views live beneath a single predictable path. | Essential | | The path is the consuming project's to choose, by where it mounts the two URLconfs. What this package guarantees is that its integrations all sit beneath whichever one is chosen. |
 | G6 | **Per-user relevance** — menu entries and cards appear only when they apply to the person looking at them, not merely when the app is installed. | Essential | | |
 | G7 | **A documented integration contract** — a developer can build an integration for their own app from the documentation, without reading this package's source. | Essential | | |
 | G8 | **One dependency, enabled per project** — commonly needed integrations ship in-tree, so a project installs one package and turns on what it uses. | Essential | | |

@@ -57,7 +57,6 @@ AccountCenterMenu.append(
                 view_name="testapp_settings",
                 extra_context={
                     "label": _("Settings"),
-                    "url_names": ("testapp_settings",),
                 },
             ),
         ],

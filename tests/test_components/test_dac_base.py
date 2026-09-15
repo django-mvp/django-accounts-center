@@ -1,9 +1,11 @@
 """
 Cotton rendering tests for dac/base.html and the sidebar user menu.
 
-dac/base.html renders the normal mvp app shell with a two-column main area:
-the Account Center sub menu (flex_menu "AccountCenterMenu") on the left and
-{% block content %} on the right.
+dac/base.html is the adapter between allauth's block vocabulary and
+django-mvp's Account Center layout. The layout is django-mvp's; what these
+tests cover is that a page extending this template arrives inside it, with the
+entries this package contributes to the menu, and that allauth's own block
+names still reach the page.
 
 The sidebar user menu is django-mvp's <c-user.sidebar-menu> component; dac
 integrates with it purely by registering the URL names it looks up
@@ -25,6 +27,20 @@ _BASE = '{% extends "dac/base.html" %}{% load i18n %}'
 # ---------------------------------------------------------------------------
 
 
+def _account_nav(soup):
+    """Every element django-mvp's account layout gives the navigation's name.
+
+    The layout draws the menu at more than one site so it is reachable at every
+    width, and how many is its own business, so these tests read all of them
+    together rather than counting or picking one.
+    """
+    return soup.find_all(attrs={"aria-label": "Account navigation"})
+
+
+def _account_nav_links(soup):
+    return [a.get("href") or "" for nav in _account_nav(soup) for a in nav.find_all("a")]
+
+
 class TestDacBaseBlockContract:
     def test_mvp_shell_sidebar_present(self, cotton_render_string_soup):
         """The mvp app shell renders untouched — dac must NOT replace the
@@ -32,48 +48,27 @@ class TestDacBaseBlockContract:
         soup = cotton_render_string_soup(_BASE)
         assert soup.find("aside", class_="mvp-sidebar") is not None
 
-    def test_account_menu_aside_present(self, cotton_render_string_soup):
-        """The Account Center sub menu renders in its own <aside> column."""
+    def test_account_navigation_present(self, cotton_render_string_soup):
+        """A page extending this template arrives inside the Account Center,
+        with the area's navigation beside it."""
         soup = cotton_render_string_soup(_BASE)
-        aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-        assert aside is not None
+        assert _account_nav(soup) != []
 
     def test_account_menu_contains_overview_link(self, cotton_render_string_soup):
-        """The sub menu links to the Account Center overview page."""
+        """The menu links to the Account Center landing page."""
         soup = cotton_render_string_soup(_BASE)
-        aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-        links = aside.find_all("a")
-        overview_links = [a for a in links if "/account-center/" in (a.get("href") or "")]
-        assert len(overview_links) >= 1
-
-    def test_account_menu_renders_both_breakpoint_variants(self, cotton_render_string_soup):
-        """The sub menu renders twice from one source: mvp's <c-dropdown>
-        below lg (div.dropdown.lg:hidden) and a persistent card from lg up
-        (div.hidden.lg:block)."""
-        soup = cotton_render_string_soup(_BASE)
-        aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-        dropdown = aside.find("div", class_="dropdown")
-        assert dropdown is not None
-        assert "lg:hidden" in dropdown.get("class", [])
-        card = aside.find("div", class_="card")
-        assert card is not None
-        assert "lg:block" in card.get("class", [])
-        # both variants carry the same menu links
-        for variant in (dropdown, card):
-            hrefs = [a.get("href") or "" for a in variant.find_all("a")]
-            assert any("/account-center/" in h for h in hrefs)
+        assert any("/account-center/" in href for href in _account_nav_links(soup))
 
     def test_account_menu_has_group_heading(self, cotton_render_string_soup):
-        """Integration items are grouped under a labelled section header."""
+        """The entries this package contributes are grouped under their own
+        heading, which is what the group it appends carries."""
         soup = cotton_render_string_soup(_BASE)
-        aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-        assert "Email & Authentication" in aside.get_text()
+        assert any("Email & Authentication" in nav.get_text() for nav in _account_nav(soup))
 
     def test_account_menu_contains_allauth_links(self, cotton_render_string_soup):
         """Email and password management items resolve to allauth URLs."""
         soup = cotton_render_string_soup(_BASE)
-        aside = soup.find("aside", attrs={"aria-label": "Account navigation"})
-        hrefs = [a.get("href") or "" for a in aside.find_all("a")]
+        hrefs = _account_nav_links(soup)
         assert any("email" in href for href in hrefs)
         assert any("password" in href for href in hrefs)
 
@@ -108,7 +103,7 @@ class TestDacBaseConsistency:
         for template in (template_a, template_b):
             soup = cotton_render_string_soup(template)
             assert soup.find("aside", class_="mvp-sidebar") is not None
-            assert soup.find("aside", attrs={"aria-label": "Account navigation"}) is not None
+            assert _account_nav(soup) != []
 
 
 class TestDacBaseStructure:
@@ -118,7 +113,7 @@ class TestDacBaseStructure:
             pathlib.Path(__file__).resolve().parent.parent.parent / "dac" / "templates" / "dac" / "base.html"
         )
         source = template_path.read_text(encoding="utf-8")
-        for block_name in ["head_title", "extra_head", "extra_body", "content", "account_menu"]:
+        for block_name in ["head_title", "extra_head", "extra_body", "content"]:
             assert f"{{% block {block_name} %}}" in source, f"Block '{block_name}' not found in dac/base.html"
 
     def test_manage_layout_extends_dac_base(self):
@@ -229,30 +224,21 @@ class TestUserSidebarMenuIntegration:
 @pytest.mark.django_db
 class TestSecondIntegrationServesManagementPage:
     """FR-008, scenario 1 — the test integration's own management view
-    renders through the shared management page carrying the sub menu, the
-    breadcrumbs and its own content."""
+    renders through the shared management page carrying the sub menu and its
+    own content."""
 
     def test_response_is_successful(self, authenticated_client):
         response = authenticated_client.get(reverse("testapp_settings"))
         assert response.status_code == 200
 
     def test_sub_menu_present(self, authenticated_client):
-        """The Account Center sub menu (dac/base.html's own aside) renders,
-        carries the test integration's own group, and links back to the
-        Account Center overview."""
+        """The Account Center sub menu renders, carries the test integration's
+        own group, and links back to the Account Center overview."""
         response = authenticated_client.get(reverse("testapp_settings"))
         content = response.content.decode()
         assert 'aria-label="Account navigation"' in content
         assert "Test App" in content
         assert f'href="{reverse("account-center")}"' in content
-
-    def test_breadcrumbs_present(self, authenticated_client):
-        """The trail carries 'Settings' as the current (leaf) crumb — the
-        same shape dac.allauth's own pages carry."""
-        response = authenticated_client.get(reverse("testapp_settings"))
-        content = response.content.decode()
-        assert 'aria-label="Breadcrumbs"' in content
-        assert "Settings" in content
 
     def test_own_content_present(self, authenticated_client):
         """{% block content %} in testapp/settings.html reaches the page."""
