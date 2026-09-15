@@ -249,3 +249,12 @@ DEP002 = ["django-crispy-forms", "crispy-tailwind"]
 DEP003 = ["toml", "flex_menu", "pytest"]
 # dotenv is used in example/ (dev-only app), not in the published package
 DEP004 = ["dotenv"]
+
+[tool.forge.conformance]
+# The product of this package is markup, so a test's subject is routinely a
+# template rather than a Python module and there is no source path to mirror
+# (constitution Article XII). Declared here rather than carried as accepted
+# drift, because a template-backed test module is correct, not a shortfall.
+non-mirror-paths = [
+    "tests/test_allauth/test_overview_cards.py",
+]
