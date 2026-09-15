@@ -195,13 +195,13 @@ reach the Account Center from the user menu at the bottom of the sidebar.
   element overrides — per-page forks are what this package exists to avoid.
 - **Entrance pages**: give your own app a signed-out page by extending
   `dac/entrance.html` and filling `{% block content %}`. It brings the same
-  chrome dac's own signed-out pages use. For a wider card, override
-  `{% block entrance %}` instead, wrapping `<c-dac.entrance size="full">`
-  around your `{% block content %}` — the content block moves inside the
-  override, because a template can declare a block only once. The default
-  width and `full` are the only two this package offers so far; django-mvp's
-  component now carries a full scale, and adopting it is
-  [#20](https://github.com/django-mvp/django-accounts-center/issues/20).
+  chrome dac's own signed-out pages use. To choose the card width, override
+  `{% block entrance %}` instead, wrapping `<c-dac.entrance size="lg">` around
+  your `{% block content %}` — the content block moves inside the override,
+  because a template can declare a block only once. The widths are django-mvp's
+  own: `sm`, `md`, `lg`, `xl`, `2xl`, `3xl` and `4xl`, or `full` for a card
+  that fills the page. It defaults to `2xl`, and a width outside that list
+  falls back to the default.
 - **Sub menu**: append items (or a labelled `mvp.menus.MenuGroup`) to
   `dac.menus.AccountCenterMenu` from your own `menus.py` (e.g. a profile-edit
   page). That menu is django-mvp's, re-exported here.
