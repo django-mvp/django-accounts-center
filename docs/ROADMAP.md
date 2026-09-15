@@ -40,7 +40,7 @@ No integration is required to reach this release, and none of it is specific to 
 
 ### R1 — The entrance page
 
-*feature · advances G2*
+*delivered in [#19](https://github.com/django-mvp/django-accounts-center/issues/19), [#20](https://github.com/django-mvp/django-accounts-center/issues/20) · advances G2*
 
 A full-screen page holding a single centered card, for anything a signed-out visitor sees. Built
 from django-mvp's entrance component rather than restyled here.
@@ -65,7 +65,7 @@ Serves G2.
 
 ### R2 — The management page
 
-*feature · advances G3, G6*
+*delivered in [#42](https://github.com/django-mvp/django-accounts-center/issues/42) · advances G3, G6*
 
 A single page style for any view where a person controls one aspect of their account, so a
 management view written by one integration is indistinguishable in shape from one written by
