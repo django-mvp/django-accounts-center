@@ -121,46 +121,62 @@ def _entrance_with_size(size):
     )
 
 
-# mvp's <c-entrance small> branch adds this class (see the `small` c-var in
-# django-mvp's cotton/entrance/index.html); its absence is the "full" branch.
-_SMALL_WIDTH_CLASS = "md:max-w-2xl"
+# The widths mvp's <c-entrance> expresses, each as the class it puts on the
+# card (see the `size` c-var in django-mvp's cotton/entrance/index.html).
+# "full" is the absence of all of them: the card fills its container.
+_SCALE = ("sm", "md", "lg", "xl", "2xl", "3xl", "4xl")
+_DEFAULT_WIDTH_CLASS = "md:max-w-2xl"
+
+
+def _width_classes(card):
+    """Every width class on the rendered card. One, or none for "full"."""
+    return [name for name in card.get("class", []) if name.startswith("md:max-w-")]
 
 
 class TestEntranceComponentWidth:
     def test_default_renders_todays_width(self, cotton_render_string_soup):
-        """A layout that overrides nothing keeps today's (small) card width."""
+        """A layout that overrides nothing keeps the width these pages have
+        always rendered at, so adopting the scale changes no existing page."""
         soup = cotton_render_string_soup(_ENTRANCE + "{% block content %}Hi{% endblock content %}")
         card = soup.find("div", class_="card")
         assert card is not None
-        assert _SMALL_WIDTH_CLASS in card.get("class", [])
+        assert _width_classes(card) == [_DEFAULT_WIDTH_CLASS]
 
-    def test_size_full_renders_wider_card(self, cotton_render_string_soup):
-        """A layout overriding {% block entrance %} with size="full" drops
-        mvp's small-width class, rendering a wider card than the default."""
-        template = _entrance_with_size("full")
-        soup = cotton_render_string_soup(template)
+    @pytest.mark.parametrize("size", _SCALE)
+    def test_each_declared_width_reaches_the_card(self, size, cotton_render_string_soup):
+        """A page declaring any width in mvp's scale gets that width, and only
+        that one — the whole point of #20."""
+        soup = cotton_render_string_soup(_entrance_with_size(size))
         card = soup.find("div", class_="card")
         assert card is not None
-        assert _SMALL_WIDTH_CLASS not in card.get("class", [])
+        assert _width_classes(card) == [f"md:max-w-{size}"]
         # Declaring a width must not cost the page its content: {% block content %}
         # moves inside the {% block entrance %} override, and still has to arrive.
         assert soup.find(id="mine") is not None
 
-    def test_default_and_full_card_classes_differ(self, cotton_render_string_soup):
-        """The default and size="full" branches render distinct card classes."""
-        default_soup = cotton_render_string_soup(_ENTRANCE + "{% block content %}Hi{% endblock content %}")
-        full_template = _entrance_with_size("full")
-        full_soup = cotton_render_string_soup(full_template)
-
-        default_card = default_soup.find("div", class_="card")
-        full_card = full_soup.find("div", class_="card")
-        assert default_card.get("class", []) != full_card.get("class", [])
-
-    def test_unrecognised_size_falls_back_to_default_width(self, cotton_render_string_soup):
-        """An unrecognised size value falls back to today's width rather than
-        emitting broken markup."""
-        template = _entrance_with_size("huge")
-        soup = cotton_render_string_soup(template)
+    def test_size_full_renders_an_unconstrained_card(self, cotton_render_string_soup):
+        """"full" carries no width class at all, so the card fills its
+        container."""
+        soup = cotton_render_string_soup(_entrance_with_size("full"))
         card = soup.find("div", class_="card")
         assert card is not None
-        assert _SMALL_WIDTH_CLASS in card.get("class", [])
+        assert _width_classes(card) == []
+        assert soup.find(id="mine") is not None
+
+    def test_declared_widths_render_distinct_cards(self, cotton_render_string_soup):
+        """Two pages declaring different widths differ on the card itself."""
+        cards = []
+        for size in ("md", "4xl", "full"):
+            soup = cotton_render_string_soup(_entrance_with_size(size))
+            cards.append(tuple(_width_classes(soup.find("div", class_="card"))))
+        assert len(set(cards)) == len(cards)
+
+    def test_unrecognised_size_falls_back_to_default_width(self, cotton_render_string_soup):
+        """A width outside mvp's scale falls back to the default rather than
+        reaching the markup: django-mvp's stylesheet carries only the widths
+        its own component names, so an invented class would style nothing."""
+        soup = cotton_render_string_soup(_entrance_with_size("huge"))
+        card = soup.find("div", class_="card")
+        assert card is not None
+        assert _width_classes(card) == [_DEFAULT_WIDTH_CLASS]
+        assert "md:max-w-huge" not in card.get("class", [])

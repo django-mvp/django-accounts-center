@@ -86,6 +86,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **An entrance page picks its card width from django-mvp's own scale.**
+  `<c-dac.entrance size="lg">` takes `sm`, `md`, `lg`, `xl`, `2xl`, `3xl` and
+  `4xl`, or `full` for a card that fills the page, where it used to offer the
+  default width or `full` and nothing between them. The default is `2xl`, the
+  width these pages have always rendered at, so a page that declares no width
+  looks exactly as it did. A width outside the scale falls back to the default
+  rather than emitting a class django-mvp's stylesheet does not carry.
+
 - `django-mvp` now requires `>=0.22`. The Account Center that release
   introduced is the one this package's menu and pages now belong to, so an
   earlier version no longer describes what this package needs.

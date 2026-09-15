@@ -40,7 +40,7 @@ No integration is required to reach this release, and none of it is specific to 
 
 ### R1 — The entrance page
 
-*feature · advances G2*
+*delivered in [#19](https://github.com/django-mvp/django-accounts-center/issues/19), [#20](https://github.com/django-mvp/django-accounts-center/issues/20) · advances G2*
 
 A full-screen page holding a single centered card, for anything a signed-out visitor sees. Built
 from django-mvp's entrance component rather than restyled here.
@@ -49,21 +49,23 @@ This is the one layout that stays here. django-mvp ships an entrance page of its
 branded card — the site logo above the content — is this package's, and a project gets it by
 extending one template rather than assembling it.
 
-It renders today, owned by the core app and reachable by any integration. The card size is still
-the interim two options.
+It renders today, owned by the core app and reachable by any integration, and a page picks its
+card width from django-mvp's own scale.
 
 **Deliverables:**
 
 - The card size accepts django-mvp's full scale rather than the interim two options
   ([#20](https://github.com/django-mvp/django-accounts-center/issues/20); the upstream scale
   shipped in django-mvp 0.16).
-- Any entrance page that reads better at a different width moves onto it.
+- Any entrance page that reads better at a different width moves onto it. None of the allauth
+  pages does: they all read well at the default, and a width is worth setting on a page that
+  needs one rather than on every page at once.
 
 Serves G2.
 
 ### R2 — The management page
 
-*feature · advances G3, G6*
+*delivered in [#42](https://github.com/django-mvp/django-accounts-center/issues/42) · advances G3, G6*
 
 A single page style for any view where a person controls one aspect of their account, so a
 management view written by one integration is indistinguishable in shape from one written by
