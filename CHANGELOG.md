@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A Django system check warns at startup if a project has turned on
+  `ACCOUNT_LOGOUT_ON_GET` or `ACCOUNT_CONFIRM_EMAIL_ON_GET` — both make a bare
+  GET request enough to end a session or consume an email confirmation.
+  README documents why to leave them at allauth's default of `False`.
+
 ### Removed
 
 - **BREAKING: this package no longer provides an Account Center.** django-mvp

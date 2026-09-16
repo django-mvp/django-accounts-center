@@ -18,3 +18,6 @@ class DacAllauthConfig(AppConfig):
     name = "dac.allauth"
     label = "dac_allauth"
     verbose_name = "Account Center — allauth"
+
+    def ready(self):
+        from . import checks  # noqa: F401

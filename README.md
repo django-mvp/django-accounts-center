@@ -158,6 +158,23 @@ LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "/accounts/"
 ```
 
+#### Two settings to leave alone
+
+allauth defaults these two to `False`. Leave them there — a project that
+turns either on makes a GET request enough to trigger something a person
+never asked for:
+
+- **`ACCOUNT_LOGOUT_ON_GET`** — `True` lets an image tag, a link prefetch, or
+  a crawler end a signed-in user's session just by requesting the sign-out
+  URL.
+- **`ACCOUNT_CONFIRM_EMAIL_ON_GET`** — `True` lets a mail gateway that
+  prefetches links consume an email confirmation before the recipient opens
+  it themselves.
+
+A Django system check warns at startup if either is on, so a project that
+inherited one from an old tutorial or a copied settings file finds out before
+it becomes an incident, not after.
+
 ### 2. URLs
 
 Two includes at the prefix of your choosing. django-mvp's URLconf carries the
