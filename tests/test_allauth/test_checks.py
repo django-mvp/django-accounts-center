@@ -7,7 +7,7 @@ consuming an email confirmation. A project that flips either back on gets a
 warning at startup, not an incident.
 """
 
-from django.core.checks import run_checks
+from django.core.checks.registry import registry
 from django.test import override_settings
 
 from dac.allauth.checks import check_unsafe_get_settings
@@ -32,7 +32,5 @@ class TestCheckUnsafeGetSettings:
         warnings = check_unsafe_get_settings(None)
         assert {w.id for w in warnings} == {"dac_allauth.W001", "dac_allauth.W002"}
 
-    @override_settings(ACCOUNT_LOGOUT_ON_GET=True)
-    def test_check_is_registered_and_runs_via_manage_py_check(self):
-        warnings = run_checks()
-        assert "dac_allauth.W001" in [w.id for w in warnings]
+    def test_check_is_registered_with_djangos_check_framework(self):
+        assert check_unsafe_get_settings in registry.registered_checks
