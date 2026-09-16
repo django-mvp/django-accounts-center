@@ -44,7 +44,7 @@ beautifulsoup4 = "^4.14.3"
 # Family dev/test toolchain: ruff, mypy, deptry, pre-commit, pytest,
 # pytest-django, factory-boy, coverage, django-stubs. Pinned to the shared
 # release tag — never @main (django-mvp/shared ADR 0001).
-mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.2.0", extras = [
+mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.4.1", extras = [
     "dev",
     "test",
 ] }
