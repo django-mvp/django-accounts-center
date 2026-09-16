@@ -11,34 +11,32 @@ startup rather than in an incident.
 """
 
 from django.conf import settings
-from django.core.checks import Tags, Warning, register
+from django.core import checks
 
 
-@register(Tags.security)
+@checks.register(checks.Tags.security)
 def check_unsafe_get_settings(app_configs, **kwargs):
     warnings = []
 
     if getattr(settings, "ACCOUNT_LOGOUT_ON_GET", False):
         warnings.append(
-            Warning(
+            checks.Warning(
                 "ACCOUNT_LOGOUT_ON_GET is True: signing out now responds to a "
                 "GET request, so an image tag, a link prefetch, or a crawler "
                 "can end a signed-in user's session without their action.",
-                hint="Set ACCOUNT_LOGOUT_ON_GET = False (allauth's default) and "
-                "require a POST to sign out.",
+                hint="Set ACCOUNT_LOGOUT_ON_GET = False (allauth's default) and require a POST to sign out.",
                 id="dac_allauth.W001",
             )
         )
 
     if getattr(settings, "ACCOUNT_CONFIRM_EMAIL_ON_GET", False):
         warnings.append(
-            Warning(
+            checks.Warning(
                 "ACCOUNT_CONFIRM_EMAIL_ON_GET is True: confirming an email "
                 "address now responds to a GET request, so a mail gateway "
                 "that prefetches links can consume the confirmation before "
                 "the recipient ever opens it.",
-                hint="Set ACCOUNT_CONFIRM_EMAIL_ON_GET = False (allauth's "
-                "default) and require a POST to confirm.",
+                hint="Set ACCOUNT_CONFIRM_EMAIL_ON_GET = False (allauth's default) and require a POST to confirm.",
                 id="dac_allauth.W002",
             )
         )
