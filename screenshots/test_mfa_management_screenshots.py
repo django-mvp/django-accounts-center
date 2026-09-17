@@ -56,7 +56,9 @@ def _save_screenshot_2vp(page, slug):
         screenshot_path = output_dir / f"{slug}.png"
         page.screenshot(path=str(screenshot_path), full_page=True)
         assert screenshot_path.exists(), f"Screenshot not written: {screenshot_path}"
-        assert screenshot_path.stat().st_size > 0, f"Screenshot empty: {screenshot_path}"
+        assert screenshot_path.stat().st_size > 0, (
+            f"Screenshot empty: {screenshot_path}"
+        )
 
 
 def _browser_login(page, live_server, username, password="testpass123"):
@@ -73,7 +75,9 @@ def _goto(page, live_server, url_name, **kwargs):
     """Navigate to a named URL and wait for the page to settle."""
     response = page.goto(live_server.url + reverse(url_name, **kwargs))
     page.wait_for_load_state("networkidle")
-    assert response is not None and response.status < 500, f"Server returned HTTP {response.status} for {url_name}"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for {url_name}"
+    )
 
 
 # ---------------------------------------------------------------------------

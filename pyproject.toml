@@ -58,99 +58,16 @@ requires = ['poetry-core (>=2.0,<3.0)']
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-target-version = "py312"
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-    "*/migrations/*.py",
-    "staticfiles/*",
-    "docs/",
-    ".github/",
-]
-line-length = 120
-fix = true
-
-[tool.ruff.lint]
-select = [
-    # flake8-2020
-    "YTT",
-    # flake8-bandit
-    "S",
-    # flake8-bugbear
-    "B",
-    # flake8-builtins
-    "A",
-    # flake8-comprehensions
-    "C4",
-    # flake8-debugger
-    "T10",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
-    # mccabe
-    "C90",
-    # pycodestyle
-    "E",
-    "W",
-    # pyflakes
-    "F",
-    # pygrep-hooks
-    "PGH",
-    # pyupgrade
-    "UP",
-    # ruff
-    "RUF",
-    # tryceratops
-    "TRY",
-]
-ignore = [
-    # LineTooLong
-    "E501",
-    # DoNotAssignLambda
-    "E731",
-    # ClassAttributesShouldBeAnnotated
-    "RUF012",
-    "TRY003",
-    "A003",
-    "F403",
-    "F405",
-    "C901",
-]
+extend = "ruff-base.toml"
 
 [tool.ruff.lint.per-file-ignores]
-# The old "**/tests/*" glob only matched files directly inside a tests dir, so
-# nothing under tests/test_allauth/ was covered. "tests/**" matches the tree.
-# S101 asserts are the point of a test; S105/S106 flag the dummy credentials
-# every auth test needs; RUF002/003 flag en dashes in test prose.
+# S101 asserts are the point of a test; S105/S106/S107 flag the dummy
+# credentials every auth test needs; RUF002/003 flag en dashes in test prose.
 "tests/**" = ["S101", "S105", "S106", "S107", "RUF002", "RUF003"]
 "screenshots/**" = ["S101", "S105", "S106", "S107", "RUF002", "RUF003"]
 "example/**" = ["S105", "S106", "S107", "RUF002", "RUF003"]
-
-[tool.ruff.format]
-docstring-code-format = true
-docstring-code-line-length = 88
-line-ending = "lf"
-exclude = ["*/migrations/*.py"]
+# Inherits the demo project's allauth settings wholesale via `import *`.
+"example/settings.py" = ["F403", "F405"]
 
 [tool.djlint]
 blank_line_after_tag = "load,endpartialdef,endblock"

@@ -36,7 +36,9 @@ def _login_and_get_session_cookie(live_server, client, user):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_password_change_page(page, live_server, client, django_user_model, save_screenshot):
+def test_password_change_page(
+    page, live_server, client, django_user_model, save_screenshot
+):
     """Authenticated user sees password_change.html in the Account Center layout."""
     user = create_test_user(django_user_model)
 
@@ -44,7 +46,9 @@ def test_password_change_page(page, live_server, client, django_user_model, save
     client.force_login(user)
     session_value = client.cookies["sessionid"].value
     page.goto(live_server.url + "/")
-    page.context.add_cookies([{"name": "sessionid", "value": session_value, "url": live_server.url}])
+    page.context.add_cookies(
+        [{"name": "sessionid", "value": session_value, "url": live_server.url}]
+    )
 
     response = page.goto(live_server.url + reverse("account_change_password"))
     page.wait_for_load_state("networkidle")
@@ -58,16 +62,22 @@ def test_password_change_page(page, live_server, client, django_user_model, save
 
 
 @pytest.mark.django_db(transaction=True)
-def test_password_set_page(page, live_server, client, django_user_model, save_screenshot):
+def test_password_set_page(
+    page, live_server, client, django_user_model, save_screenshot
+):
     """Authenticated user with no password sees password_set.html with DAC layout."""
-    user = django_user_model.objects.create_user(username="nopwduser", email="nopwd@example.com", password="temp")
+    user = django_user_model.objects.create_user(
+        username="nopwduser", email="nopwd@example.com", password="temp"
+    )
     user.set_unusable_password()
     user.save()
 
     client.force_login(user)
     session_value = client.cookies["sessionid"].value
     page.goto(live_server.url + "/")
-    page.context.add_cookies([{"name": "sessionid", "value": session_value, "url": live_server.url}])
+    page.context.add_cookies(
+        [{"name": "sessionid", "value": session_value, "url": live_server.url}]
+    )
 
     response = page.goto(live_server.url + reverse("account_set_password"))
     page.wait_for_load_state("networkidle")
@@ -81,14 +91,18 @@ def test_password_set_page(page, live_server, client, django_user_model, save_sc
 
 
 @pytest.mark.django_db(transaction=True)
-def test_reauthenticate_page(page, live_server, client, django_user_model, save_screenshot):
+def test_reauthenticate_page(
+    page, live_server, client, django_user_model, save_screenshot
+):
     """Authenticated user sees reauthenticate.html as an entrance-style page."""
     user = create_test_user(django_user_model)
 
     client.force_login(user)
     session_value = client.cookies["sessionid"].value
     page.goto(live_server.url + "/")
-    page.context.add_cookies([{"name": "sessionid", "value": session_value, "url": live_server.url}])
+    page.context.add_cookies(
+        [{"name": "sessionid", "value": session_value, "url": live_server.url}]
+    )
 
     response = page.goto(live_server.url + reverse("account_reauthenticate"))
     page.wait_for_load_state("networkidle")
@@ -102,14 +116,18 @@ def test_reauthenticate_page(page, live_server, client, django_user_model, save_
 
 
 @pytest.mark.django_db(transaction=True)
-def test_reauthenticate_with_alternatives_page(page, live_server, client, django_user_model, save_screenshot):
+def test_reauthenticate_with_alternatives_page(
+    page, live_server, client, django_user_model, save_screenshot
+):
     """Reauthenticate page with mock reauthentication_alternatives shows 'Alternative options'."""
     user = create_test_user(django_user_model)
 
     client.force_login(user)
     session_value = client.cookies["sessionid"].value
     page.goto(live_server.url + "/")
-    page.context.add_cookies([{"name": "sessionid", "value": session_value, "url": live_server.url}])
+    page.context.add_cookies(
+        [{"name": "sessionid", "value": session_value, "url": live_server.url}]
+    )
 
     response = page.goto(live_server.url + reverse("test_reauthenticate_alternatives"))
     page.wait_for_load_state("networkidle")
