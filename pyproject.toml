@@ -32,7 +32,7 @@ packages = [{ include = "dac" }]
 requires-poetry = '>=2.0,<3.0'
 
 [tool.poetry.group.dev.dependencies]
-django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.19.2" }
+django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.19.3" }
 # Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
 # in the `allauth` extra for consumers; here so a dev `poetry install` gets a
 # working crispy_tailwind (tailwind_filters) rather than a partial one.
