@@ -73,7 +73,9 @@ def test_login_request_code_page(live_server, settings, capture_screenshot):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_login_confirm_code_page(page, live_server, settings, django_user_model, save_screenshot):
+def test_login_confirm_code_page(
+    page, live_server, settings, django_user_model, save_screenshot
+):
     """Reach the confirm-code page by submitting the request-code form, then screenshot."""
     settings.ACCOUNT_LOGIN_BY_CODE_ENABLED = True
     user = create_test_user(django_user_model)
@@ -88,7 +90,9 @@ def test_login_confirm_code_page(page, live_server, settings, django_user_model,
     page.wait_for_load_state("networkidle")
     nav_response = nav_info.value
     if nav_response is not None:
-        assert nav_response.status < 500, f"Server returned HTTP {nav_response.status} during login code submission"
+        assert nav_response.status < 500, (
+            f"Server returned HTTP {nav_response.status} during login code submission"
+        )
     save_screenshot("login-confirm-code-page")
 
 
@@ -103,9 +107,13 @@ def test_socialaccount_login_confirm(live_server, settings, capture_screenshot):
     settings.SOCIALACCOUNT_ENABLED = True
     settings.SOCIALACCOUNT_LOGIN_ON_GET = False
     create_google_social_app()
-    capture_screenshot(reverse("google_login") + "?process=login", "socialaccount-login-confirm")
+    capture_screenshot(
+        reverse("google_login") + "?process=login", "socialaccount-login-confirm"
+    )
 
 
 @pytest.mark.django_db(transaction=True)
 def test_socialaccount_login_cancelled(live_server, capture_screenshot):
-    capture_screenshot(reverse("socialaccount_login_cancelled"), "socialaccount-login-cancelled")
+    capture_screenshot(
+        reverse("socialaccount_login_cancelled"), "socialaccount-login-cancelled"
+    )

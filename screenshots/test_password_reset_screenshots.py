@@ -42,7 +42,9 @@ def test_password_reset_done_page(live_server, settings, capture_screenshot):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_password_reset_from_key_page(page, live_server, settings, django_user_model, save_screenshot):
+def test_password_reset_from_key_page(
+    page, live_server, settings, django_user_model, save_screenshot
+):
     """Screenshot: password_reset_from_key.html (valid token — renders change-password form)."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
     user = create_test_user(django_user_model)
@@ -54,12 +56,16 @@ def test_password_reset_from_key_page(page, live_server, settings, django_user_m
     )
     response = page.goto(live_server.url + url)
     page.wait_for_load_state("networkidle")
-    assert response is not None and response.status < 500, f"Server returned HTTP {response.status} for reset key URL"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for reset key URL"
+    )
     save_screenshot("password-reset-from-key")
 
 
 @pytest.mark.django_db(transaction=True)
-def test_password_reset_from_key_invalid_page(live_server, settings, capture_screenshot):
+def test_password_reset_from_key_invalid_page(
+    live_server, settings, capture_screenshot
+):
     """Screenshot: password_reset_from_key.html with invalid token (token_fail branch)."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
     url = reverse(
@@ -73,4 +79,6 @@ def test_password_reset_from_key_invalid_page(live_server, settings, capture_scr
 def test_password_reset_from_key_done_page(live_server, settings, capture_screenshot):
     """Screenshot: password_reset_from_key_done.html."""
     settings.ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = False
-    capture_screenshot(reverse("account_reset_password_from_key_done"), "password-reset-from-key-done")
+    capture_screenshot(
+        reverse("account_reset_password_from_key_done"), "password-reset-from-key-done"
+    )

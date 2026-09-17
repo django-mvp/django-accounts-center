@@ -35,7 +35,9 @@ def _browser_login(page, live_server, username, password="testpass123"):
     """Log in through the allauth login form and wait for the redirect."""
     response = page.goto(live_server.url + reverse("account_login"))
     page.wait_for_load_state("networkidle")
-    assert response is not None and response.status < 500, f"Login page returned HTTP {response.status}"
+    assert response is not None and response.status < 500, (
+        f"Login page returned HTTP {response.status}"
+    )
     page.fill("input[name=login]", username)
     page.fill("input[name=password]", password)
     with page.expect_navigation(wait_until="networkidle"):
@@ -58,7 +60,9 @@ def _create_google_social_account(user):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_connections_has_accounts(page, live_server, settings, django_user_model, save_screenshot):
+def test_connections_has_accounts(
+    page, live_server, settings, django_user_model, save_screenshot
+):
     """Screenshot: connections.html — authenticated user with 1 Google account connected."""
     user = create_test_user(django_user_model)
     create_google_social_app()
@@ -79,7 +83,9 @@ def test_connections_has_accounts(page, live_server, settings, django_user_model
 
 
 @pytest.mark.django_db(transaction=True)
-def test_connections_no_accounts(page, live_server, settings, django_user_model, save_screenshot):
+def test_connections_no_accounts(
+    page, live_server, settings, django_user_model, save_screenshot
+):
     """Screenshot: connections.html — authenticated user with no social accounts (empty state)."""
     user = create_test_user(django_user_model)
 
