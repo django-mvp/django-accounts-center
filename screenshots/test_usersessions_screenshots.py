@@ -45,15 +45,21 @@ def _save_screenshot_2vp(page, slug):
         output_dir.mkdir(parents=True, exist_ok=True)
         screenshot_path = output_dir / f"{slug}.png"
         page.screenshot(path=str(screenshot_path), full_page=True)
-        assert screenshot_path.exists(), f"Screenshot was not written to {screenshot_path}"
-        assert screenshot_path.stat().st_size > 0, f"Screenshot at {screenshot_path} is empty"
+        assert screenshot_path.exists(), (
+            f"Screenshot was not written to {screenshot_path}"
+        )
+        assert screenshot_path.stat().st_size > 0, (
+            f"Screenshot at {screenshot_path} is empty"
+        )
 
 
 def _browser_login(page, live_server, username, password="defaultpass123"):
     """Log in through the allauth login form and wait for the redirect."""
     response = page.goto(live_server.url + reverse("account_login"))
     page.wait_for_load_state("networkidle")
-    assert response is not None and response.status < 500, f"Login page returned HTTP {response.status}"
+    assert response is not None and response.status < 500, (
+        f"Login page returned HTTP {response.status}"
+    )
     page.fill("input[name=login]", username)
     page.fill("input[name=password]", password)
     with page.expect_navigation(wait_until="networkidle"):
@@ -110,6 +116,8 @@ def test_sessions_single(page, live_server, django_user_model):
 
     response = page.goto(live_server.url + reverse("usersessions_list"))
     page.wait_for_load_state("networkidle")
-    assert response is not None and response.status < 500, f"Server returned HTTP {response.status} for sessions-single"
+    assert response is not None and response.status < 500, (
+        f"Server returned HTTP {response.status} for sessions-single"
+    )
 
     _save_screenshot_2vp(page, "sessions-single")

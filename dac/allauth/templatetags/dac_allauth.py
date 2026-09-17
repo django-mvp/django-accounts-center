@@ -115,5 +115,9 @@ def account_summary(context):
             else None
         ),
         mfa=_two_factor(user) if app_is_installed("allauth.mfa") else None,
-        sessions=(Sessions(count=user.usersession_set.count()) if app_is_installed("allauth.usersessions") else None),
+        sessions=(
+            Sessions(count=user.usersession_set.count())
+            if app_is_installed("allauth.usersessions")
+            else None
+        ),
     )

@@ -25,15 +25,21 @@ VIEWPORTS = [
 
 def create_google_social_app():
     """Create a Google SocialApp associated with site 1 and return it."""
-    site, _ = Site.objects.get_or_create(id=1, defaults={"domain": "example.com", "name": "Example"})
-    app = SocialApp.objects.create(provider="google", name="Google", client_id="test-id", secret="test-secret")
+    site, _ = Site.objects.get_or_create(
+        id=1, defaults={"domain": "example.com", "name": "Example"}
+    )
+    app = SocialApp.objects.create(
+        provider="google", name="Google", client_id="test-id", secret="test-secret"
+    )
     app.sites.add(site)
     return app
 
 
 def create_test_user(django_user_model):
     """Create a basic user for authenticated flows."""
-    return django_user_model.objects.create_user(username="testuser", email="test@example.com", password="testpass123")
+    return django_user_model.objects.create_user(
+        username="testuser", email="test@example.com", password="testpass123"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -62,8 +68,12 @@ def save_screenshot(page):
             output_dir.mkdir(parents=True, exist_ok=True)
             screenshot_path = output_dir / f"{slug}.png"
             page.screenshot(path=str(screenshot_path), full_page=True)
-            assert screenshot_path.exists(), f"Screenshot was not written to {screenshot_path}"
-            assert screenshot_path.stat().st_size > 0, f"Screenshot at {screenshot_path} is empty"
+            assert screenshot_path.exists(), (
+                f"Screenshot was not written to {screenshot_path}"
+            )
+            assert screenshot_path.stat().st_size > 0, (
+                f"Screenshot at {screenshot_path} is empty"
+            )
 
     return _save
 
@@ -88,7 +98,9 @@ def capture_screenshot(page, live_server, save_screenshot):
         response = page.goto(live_server.url + url)
         page.wait_for_load_state("networkidle")
         assert response is not None, f"No response received for {live_server.url + url}"
-        assert response.status < 500, f"Server returned HTTP {response.status} for {live_server.url + url}"
+        assert response.status < 500, (
+            f"Server returned HTTP {response.status} for {live_server.url + url}"
+        )
         save_screenshot(slug)
 
     return _capture
