@@ -151,12 +151,17 @@ class TestUserSidebarMenuIntegration:
         soup = cotton_render_string_soup_authenticated(_USER_MENU)
         assert soup.find("div", class_="dropdown") is not None
 
-    def test_username_and_email_in_trigger(self, cotton_render_string_soup_authenticated):
+    def test_trigger_identifies_the_signed_in_user(self, cotton_render_string_soup_authenticated):
+        """Which of a user's details the trigger shows belongs to django-mvp,
+        and it has changed them: 0.23.0 folded a two-line name-and-email block
+        into one line carrying the name. Asserting the email pinned that
+        package's markup rather than anything this package contributes, so an
+        upgrade failed a test about a choice this package does not make. What
+        this package needs is that the trigger says who is signed in."""
         soup = cotton_render_string_soup_authenticated(_USER_MENU)
         trigger = soup.find(attrs={"role": "button"})
         assert trigger is not None
         assert "testuser" in trigger.get_text()
-        assert "test@example.com" in trigger.get_text()
 
     def test_account_center_link_present(self, cotton_render_string_soup_authenticated):
         """FR: the Account Center item appears because dac registers the URL."""
