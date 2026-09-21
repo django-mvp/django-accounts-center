@@ -724,14 +724,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-allauth"
-version = "65.19.3"
+version = "65.19.4"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "django_allauth-65.19.3-py3-none-any.whl", hash = "sha256:5dc1936001bd33771d453032366af25fc16fcd35a93789f46206d5d2a7cc83e0"},
-    {file = "django_allauth-65.19.3.tar.gz", hash = "sha256:2267b66c3212645ef2f1b26bc46ca220abea6281cd78c7014a427a1f759137a3"},
+    {file = "django_allauth-65.19.4-py3-none-any.whl", hash = "sha256:a4f13476ad460ab1098af6be41ae72ed1d07498dd4514e05b9daef09a6c1cabd"},
+    {file = "django_allauth-65.19.4.tar.gz", hash = "sha256:7ea5f0057f91fa25f9ca7814f84aed63a66096b43df073fbdf1ef0167bc92f1d"},
 ]
 markers = {main = "extra == \"allauth\""}
 
@@ -914,14 +914,14 @@ rich = ">=13"
 
 [[package]]
 name = "django-mvp"
-version = "0.22.0"
+version = "0.23.0"
 description = "MVP framework for Django - scaffold production-ready applications with sophisticated layouts and UI patterns designed for data-centric applications."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "django_mvp-0.22.0-py3-none-any.whl", hash = "sha256:2c94e2b9d2d6a491d1d3e6ea53715847c5a30cc5317bf7572e8951008722439a"},
-    {file = "django_mvp-0.22.0.tar.gz", hash = "sha256:ef9a6dcbf913bc9c1dfe35f647e0adf3a11277192b746eb12ea415363306faed"},
+    {file = "django_mvp-0.23.0-py3-none-any.whl", hash = "sha256:deeb8ab10596a7cf6401bba1e377eb3cfee705d26af9cd300c48ce19812b6615"},
+    {file = "django_mvp-0.23.0.tar.gz", hash = "sha256:568bc9c25cf0330218608b0d5ad0217864c6b140119e068a6e5cf8b05e346426"},
 ]
 
 [package.dependencies]
@@ -3175,4 +3175,4 @@ allauth = ["crispy-tailwind", "django-allauth", "django-crispy-forms"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "117bc5962bb23f4e45153c86856ac0f4115464886f03c11413d43bb40d2cec09"
+content-hash = "c433f28903237db4acda08e22d42f55cbcf61d5415006c623799cd482c24f3a5"
