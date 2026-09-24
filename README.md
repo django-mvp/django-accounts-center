@@ -227,13 +227,13 @@ reach the Account Center from the user menu at the bottom of the sidebar.
 ```bash
 git clone https://github.com/SamuelJennings/django-accounts-center.git
 cd django-accounts-center
-poetry install
+uv sync
 
 # run the example project
-python manage.py runserver
+uv run python manage.py runserver
 
 # tests
-pytest
+uv run pytest
 ```
 
 The `example/` project exercises an aggressive allauth configuration
