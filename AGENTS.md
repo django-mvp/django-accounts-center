@@ -13,14 +13,14 @@ are recorded in `GOALS.md`.
 
 ## Stack & commands
 
-- **Stack:** Python ≥ 3.12 / Django ≥ 5, Poetry-managed. No front-end build: the stylesheet is
+- **Stack:** Python ≥ 3.12 / Django ≥ 5, uv-managed. No front-end build: the stylesheet is
   django-mvp's, and this package composes its components and the DaisyUI utilities behind them.
-- **Install:** `poetry install`
-- **Test:** `poetry run pytest`
-- **Lint:** `poetry run ruff check .` (templates: `poetry run djlint .`)
-- **Type-check:** `poetry run mypy .`
-- **Build:** `poetry build`
-- **Screenshots (on demand, not a gate):** `poetry run pytest screenshots/`
+- **Install:** `uv sync`
+- **Test:** `uv run pytest`
+- **Lint:** `uv run ruff check .` (templates: `uv run djlint .`)
+- **Type-check:** `uv run mypy .`
+- **Build:** `uv build`
+- **Screenshots (on demand, not a gate):** `uv run pytest screenshots/`
 
 ## Agent skills
 
@@ -50,8 +50,10 @@ call-build / Security Scan
 call-build / Build Package
 call-tests / Test Python 3.12, Django 5.2
 call-tests / Test Python 3.12, Django 6.0
+call-tests / Test Python 3.12, Django 6.1
 call-tests / Test Python 3.13, Django 5.2
 call-tests / Test Python 3.13, Django 6.0
+call-tests / Test Python 3.13, Django 6.1
 ```
 
 CI is repo-native and calls the shared django-mvp reusable workflows, pinned to a release tag.

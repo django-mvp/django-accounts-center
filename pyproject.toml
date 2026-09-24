@@ -3,10 +3,20 @@
 name = "django-accounts-center"
 description = "The account-management layer for django-mvp projects: an Account Center, an entrance layout, and a system for integrating third-party account apps."
 license = "MIT"
-dynamic = ["version"]
+version = "0.8.0"
 readme = "README.md"
 authors = [{ name = "Sam", email = "samuel.scott.jennings@gmail.com" }]
 requires-python = ">=3.12,<4.0"
+classifiers = [
+    "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 dependencies = [
     # Bounds are the ranges CI actually verifies (5.2 and 6.0), per Article XV.
     "django (>=5.2.17,<7.0)",
@@ -26,36 +36,42 @@ allauth = [
     "crispy-tailwind (>=1.0.3,<2.0)",
 ]
 
-[tool.poetry]
-version = "0.8.0"
-packages = [{ include = "dac" }]
-requires-poetry = '>=2.0,<3.0'
+[dependency-groups]
+dev = [
+    "django-allauth[mfa,socialaccount]>=65.19.2,<66",
+    # Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
+    # in the `allauth` extra for consumers; here so a dev `uv sync` gets a
+    # working crispy_tailwind (tailwind_filters) rather than a partial one.
+    "django-crispy-forms>=2.7,<3",
+    "crispy-tailwind>=1.0.3,<2",
+    "python-dotenv>=1.2.3,<2",
+    "django-extensions>=4.1,<5",
+    "beautifulsoup4>=4.14.3,<5",
+    # Shared dev/test toolchain: ruff, mypy, deptry, pre-commit, pytest,
+    # pytest-django, factory-boy, coverage, django-stubs. Pinned to the shared
+    # release tag — never @main (django-mvp/shared ADR 0001).
+    "mvp-shared[dev,test]",
+    "pytest-playwright>=0.9.0,<1",
+]
 
-[tool.poetry.group.dev.dependencies]
-django-allauth = { extras = ["mfa", "socialaccount"], version = "^65.19.3" }
-# Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
-# in the `allauth` extra for consumers; here so a dev `poetry install` gets a
-# working crispy_tailwind (tailwind_filters) rather than a partial one.
-django-crispy-forms = "^2.7"
-crispy-tailwind = "^1.0.3"
-python-dotenv = "^1.2.3"
-django-extensions = "^4.1"
-beautifulsoup4 = "^4.14.3"
-# Family dev/test toolchain: ruff, mypy, deptry, pre-commit, pytest,
-# pytest-django, factory-boy, coverage, django-stubs. Pinned to the shared
-# release tag — never @main (django-mvp/shared ADR 0001).
-mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.4.1", extras = [
-    "dev",
-    "test",
-] }
-pytest-playwright = "^0.9.0"
-
-# [tool.poetry.group.local.dependencies]
-# django-mvp = { path = "../django-mvp", develop = true }
+[tool.uv.sources]
+mvp-shared = { git = "https://github.com/django-mvp/shared.git", tag = "v0.6.0" }
 
 [build-system]
-requires = ['poetry-core (>=2.0,<3.0)']
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dac"]
+
+# Hatchling's default source distribution is the whole working tree: tests, the
+# example project, specs, documentation and CI configuration. Listing what ships
+# keeps it to the package, the readme and the licence. Entries are anchored with
+# a leading slash so `README.md` does not also match nested readmes. Hatchling
+# adds .gitignore itself, so that a build from the source distribution leaves
+# out what the repository does.
+[tool.hatch.build.targets.sdist]
+include = ["/dac", "/README.md", "/LICENSE"]
 
 [tool.ruff]
 extend = "ruff-base.toml"

@@ -4,7 +4,14 @@ name: Deploy Docs
 on:
   workflow_dispatch:
 
+# The reusable workflow has a Pages deploy job that needs these permissions. A
+# caller that does not grant them fails at startup, even when deploy is skipped.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   call-docs:
-    uses: django-mvp/shared/.github/workflows/docs.yml@v0.4.1
+    uses: django-mvp/shared/.github/workflows/docs.yml@v0.6.0
     secrets: inherit

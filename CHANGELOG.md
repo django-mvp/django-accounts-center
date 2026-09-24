@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Django 6.1 is supported, and tested on every change alongside 5.2 and 6.0.
+
+### Changed
+
+- The project is built and developed with uv instead of Poetry. Contributors
+  run `uv sync` to install and `uv run pytest` to test. The published wheel is
+  unchanged. The source distribution now contains only the package, the readme
+  and the licence.
+
 ## [v0.8.0] - 2026-09-16
 
 ### Removed

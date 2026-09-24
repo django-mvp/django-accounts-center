@@ -224,7 +224,7 @@ This is a reusable Django extension; consumers and upgrades come first.
   here to rebuild and nothing that can go stale against these templates.
 
 ### Article XVI — Stack norms
-Poetry-managed, Python ≥ 3.12, Django ≥ 5. Dev and test dependencies come from the
+uv-managed, Python ≥ 3.12, Django ≥ 5. Dev and test dependencies come from the
 `mvp-shared[dev,test]` bundle pinned to the family tag. Ruff owns lint and format for Python;
 djlint owns template formatting, and templates are never committed with djlint violations. The
 UI stack is Tailwind CSS v4 + DaisyUI 5 on the django-mvp app shell, consumed through
