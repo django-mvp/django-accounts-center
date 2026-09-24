@@ -16,7 +16,7 @@ def prerelease(c, no_test=False):
     - Code formatting (Ruff)
     - Type checking (mypy)
     - Dependency analysis (deptry)
-    - Poetry validation
+    - Lockfile validation
     """
     print("🚀 Starting comprehensive pre-release checks...")
     print("=" * 60)
@@ -26,19 +26,19 @@ def prerelease(c, no_test=False):
         "\n🧹 Step 1: Running comprehensive linting, type checking, and dependency analysis"
     )
     print("🚀 Running pre-commit hooks (includes mypy and deptry)")
-    c.run("poetry run pre-commit run -a")
+    c.run("uv run pre-commit run -a")
 
-    # Step 2: Check Poetry lock file consistency
-    print("\n🔍 Step 2: Checking Poetry lock file consistency")
-    print("🚀 Checking Poetry lock file consistency with 'pyproject.toml'")
-    c.run("poetry check --lock")
+    # Step 2: Check uv lock file consistency
+    print("\n🔍 Step 2: Checking uv lock file consistency")
+    print("🚀 Checking uv lock file consistency with 'pyproject.toml'")
+    c.run("uv lock --check")
 
     # Step 3: Run comprehensive test suite
     if not no_test:
         print("\n🧪 Step 3: Running comprehensive test suite")
         print("🚀 Running pytest with coverage")
         c.run(
-            "poetry run pytest --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term --tb=no -qq"
+            "uv run pytest --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term --tb=no -qq"
         )
 
     print("\n" + "=" * 60)
@@ -58,17 +58,17 @@ def release(c, rule="", retry=False):
     a new build and deployment of the package to PyPI.
 
     Args:
-        rule: Version bump rule (major, minor, patch, premajor, preminor, prepatch, prerelease)
+        rule: Version bump rule (major, minor, patch, alpha, beta, rc, post, dev)
         retry: If True, force-push existing tags without creating new version (default: False)
 
     RULE        BEFORE  AFTER
     major       1.3.0   2.0.0
     minor       2.1.4   2.2.0
     patch       4.1.1   4.1.2
-    premajor    1.0.2   2.0.0a0
-    preminor    1.0.2   1.1.0a0
-    prepatch    1.0.2   1.0.3a0
-    prerelease  1.0.2   1.0.3a0
+    alpha       1.0.2   1.0.3a1
+    beta        1.0.3a1 1.0.3b1
+    rc          1.0.3b1 1.0.3rc1
+    stable      1.0.3rc1 1.0.3
 
     Examples:
         invoke release --rule=patch        # Bump patch version and release
@@ -76,8 +76,8 @@ def release(c, rule="", retry=False):
     """
     # prerelease(c)
     # Get the current version number
-    version_short = c.run("poetry version -s", hide=True).stdout.strip()
-    version = c.run("poetry version", hide=True).stdout.strip()
+    version_short = c.run("uv version --short", hide=True).stdout.strip()
+    version = c.run("uv version", hide=True).stdout.strip()
 
     if retry:
         # retry existing tags without creating new version
@@ -111,7 +111,7 @@ def release(c, rule="", retry=False):
         print("❌ Error: You must specify a version bump rule.")
         print("   Example: invoke release --rule=patch")
         print(
-            "\n   Available rules: major, minor, patch, premajor, preminor, prepatch, prerelease"
+            "\n   Available rules: major, minor, patch, stable, alpha, beta, rc, post, dev"
         )
         return
 
@@ -126,18 +126,20 @@ def release(c, rule="", retry=False):
             return
 
     # Bump the current version using the specified rule
-    c.run(f"poetry version {rule}")
-    version_short = c.run("poetry version -s", hide=True).stdout.strip()
-    version = c.run("poetry version", hide=True).stdout.strip()
+    c.run(f"uv version --bump {rule}")
+    version_short = c.run("uv version --short", hide=True).stdout.strip()
+    version = c.run("uv version", hide=True).stdout.strip()
 
     # Commit the version bump and any staged changes
     staged_result = c.run("git diff --cached --name-only", hide=True, warn=True)
     if staged_result.stdout.strip():
         print(f"🚀 Committing staged changes and version bump for v{version_short}")
-        c.run(f'git add pyproject.toml && git commit -m "Release v{version_short}"')
+        c.run(
+            f'git add pyproject.toml uv.lock && git commit -m "Release v{version_short}"'
+        )
     else:
         print(f"🚀 Committing version bump for v{version_short}")
-        c.run(f'git commit pyproject.toml -m "Release v{version_short}"')
+        c.run(f'git commit pyproject.toml uv.lock -m "Release v{version_short}"')
 
     # Create an annotated tag
     c.run(f'git tag -a v{version_short} -m "{version}"')

@@ -9,13 +9,13 @@ Screenshot-only pytest-playwright modules that render pages across viewports so 
 ## Running screenshot tests
 
 ```bash
-poetry run pytest screenshots/
+uv run pytest screenshots/
 ```
 
 To regenerate screenshots for a specific module:
 
 ```bash
-poetry run pytest screenshots/test_signup_screenshots.py
+uv run pytest screenshots/test_signup_screenshots.py
 ```
 
 ## Output
