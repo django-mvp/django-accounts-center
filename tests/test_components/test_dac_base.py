@@ -7,7 +7,7 @@ tests cover is that a page extending this template arrives inside it, with the
 entries this package contributes to the menu, and that allauth's own block
 names still reach the page.
 
-The sidebar user menu is django-mvp's <c-user.sidebar-menu> component; dac
+The sidebar user menu is django-mvp's <c-mvp.user.sidebar-menu> component; dac
 integrates with it purely by registering the URL names it looks up
 (account-center, account_logout). The tests here cover that integration
 contract, not the component internals (those belong to django-mvp).
@@ -132,10 +132,10 @@ class TestDacBaseStructure:
 
 
 # ---------------------------------------------------------------------------
-# Sidebar user menu (django-mvp's <c-user.sidebar-menu>) — integration
+# Sidebar user menu (django-mvp's <c-mvp.user.sidebar-menu>) — integration
 # ---------------------------------------------------------------------------
 
-_USER_MENU = "<c-user.sidebar-menu />"
+_USER_MENU = "<c-mvp.user.sidebar-menu />"
 
 
 class TestUserSidebarMenuIntegration:
@@ -196,9 +196,9 @@ class TestUserSidebarMenuIntegration:
         """Extra menu items passed via the slot render before the logout entry."""
         soup = cotton_render_string_soup_authenticated(
             """
-            <c-user.sidebar-menu>
-              <c-menu.item label="Settings" href="#" />
-            </c-user.sidebar-menu>
+            <c-mvp.user.sidebar-menu>
+              <c-menu.item text="Settings" href="#" />
+            </c-mvp.user.sidebar-menu>
             """
         )
         rendered_html = str(soup)

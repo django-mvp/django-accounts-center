@@ -11,7 +11,7 @@
   no longer one to load.
 {% endcomment %}
 {% block app %}
-  <c-messages :messages="messages" dismissible />
+  <c-mvp.messages :messages="messages" dismissible />
   {% block entrance %}
     <c-dac.entrance>
       {% block content %}

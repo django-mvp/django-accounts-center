@@ -20,13 +20,13 @@ _ENTRANCE = '{% extends "dac/entrance.html" %}{% load i18n %}'
 
 class TestEntrancePageBlockContract:
     def test_full_screen_background_present(self, cotton_render_string_soup):
-        """mvp's <c-entrance> background wraps the page (full-screen, centered)."""
+        """mvp's <c-mvp.entrance> background wraps the page (full-screen, centered)."""
         soup = cotton_render_string_soup(_ENTRANCE)
         background = soup.find("div", class_="min-h-screen")
         assert background is not None
 
     def test_one_centered_card_present(self, cotton_render_string_soup):
-        """Exactly one card renders (mvp's <c-entrance> card) — no app supplies
+        """Exactly one card renders (mvp's <c-mvp.entrance> card) — no app supplies
         its own card markup."""
         soup = cotton_render_string_soup(_ENTRANCE)
         cards = soup.find_all("div", class_="card")
@@ -59,7 +59,7 @@ class TestEntrancePageBlockContract:
         assert not any("dac.css" in href for href in hrefs)
 
     def test_messages_region_present(self, cotton_render_string_soup):
-        """mvp's <c-messages> toast region renders even with no messages
+        """mvp's <c-mvp.messages> toast region renders even with no messages
         queued (FR-011)."""
         soup = cotton_render_string_soup(_ENTRANCE)
         toast = soup.find("div", class_="toast")
@@ -121,8 +121,8 @@ def _entrance_with_size(size):
     )
 
 
-# The widths mvp's <c-entrance> expresses, each as the class it puts on the
-# card (see the `size` c-var in django-mvp's cotton/entrance/index.html).
+# The widths mvp's <c-mvp.entrance> expresses, each as the class it puts on the
+# card (see the `size` c-var in django-mvp's cotton/mvp/entrance/index.html).
 # "full" is the absence of all of them: the card fills its container.
 _SCALE = ("sm", "md", "lg", "xl", "2xl", "3xl", "4xl")
 _DEFAULT_WIDTH_CLASS = "md:max-w-2xl"

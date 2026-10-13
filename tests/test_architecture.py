@@ -93,7 +93,7 @@ def test_allauth_entrance_layout_delegates_its_chrome():
     path = DAC_ALLAUTH_TEMPLATES / "allauth" / "layouts" / "entrance.html"
     source = path.read_text(encoding="utf-8")
     assert '{% extends "dac/entrance.html" %}' in source
-    for forbidden in ("c-entrance", "c-messages", "<img", "logo_url", "{% block app %}", "{% block styles %}"):
+    for forbidden in ("c-mvp.entrance", "c-mvp.messages", "<img", "logo_url", "{% block app %}", "{% block styles %}"):
         assert forbidden not in source, (
             f"{path.relative_to(DAC_ALLAUTH_TEMPLATES.parent.parent)} still authors '{forbidden}' "
             "directly instead of delegating to dac/entrance.html"

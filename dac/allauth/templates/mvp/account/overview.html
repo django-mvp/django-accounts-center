@@ -22,7 +22,7 @@
 {% block account.cards %}
   {{ block.super }}
   {% account_summary as account %}
-  <c-card title="{% trans "Email" %}" icon="email">
+  <c-mvp.card title="{% trans "Email" %}" icon="email">
     <c-slot name="badges">
       {% if account.unverified_email_count %}
         <c-badge variant="warning"
@@ -47,7 +47,7 @@
         {% endif %}
       </div>
     {% empty %}
-      <c-text size="sm"
+      <c-mvp.text size="sm"
               muted
               text="{% trans "No email address on record." %}" />
     {% endfor %}
@@ -58,14 +58,14 @@
                 href="{% url 'account_email' %}"
                 text="{% trans "Manage email" %}" />
     </c-slot>
-  </c-card>
-  <c-card title="{% trans "Password" %}" icon="password">
+  </c-mvp.card>
+  <c-mvp.card title="{% trans "Password" %}" icon="password">
     {% if account.has_password %}
-      <c-text size="sm"
+      <c-mvp.text size="sm"
               muted
               text="{% trans "A password is set for your account." %}" />
     {% else %}
-      <c-text size="sm"
+      <c-mvp.text size="sm"
               muted
               text="{% trans "You have no password set. You sign in via a third-party account, code or passkey." %}" />
     {% endif %}
@@ -84,9 +84,9 @@
                   text="{% trans "Set password" %}" />
       {% endif %}
     </c-slot>
-  </c-card>
+  </c-mvp.card>
   {% if account.social %}
-    <c-card title="{% trans "Connected accounts" %}"
+    <c-mvp.card title="{% trans "Connected accounts" %}"
             icon="social">
       {% for socialaccount in account.social.accounts %}
         <div class="flex items-center gap-2 text-sm">
@@ -94,7 +94,7 @@
           <span class="text-base-content/60 truncate">{{ socialaccount }}</span>
         </div>
       {% empty %}
-        <c-text size="sm"
+        <c-mvp.text size="sm"
                 muted
                 text="{% trans "No third-party accounts connected." %}" />
       {% endfor %}
@@ -105,10 +105,10 @@
                   href="{% url 'socialaccount_connections' %}"
                   text="{% trans "Manage connections" %}" />
       </c-slot>
-    </c-card>
+    </c-mvp.card>
   {% endif %}
   {% if account.mfa %}
-    <c-card title="{% trans "Two-factor authentication" %}"
+    <c-mvp.card title="{% trans "Two-factor authentication" %}"
             icon="mfa">
       <c-slot name="badges">
         {% if account.mfa.enabled %}
@@ -122,11 +122,11 @@
         {% endif %}
       </c-slot>
       {% if account.mfa.enabled %}
-        <c-text size="sm"
+        <c-mvp.text size="sm"
                 muted
                 text="{% trans "Your account is protected by two-factor authentication." %}" />
       {% else %}
-        <c-text size="sm"
+        <c-mvp.text size="sm"
                 muted
                 text="{% trans "Add a second factor to make your account more secure." %}" />
       {% endif %}
@@ -137,11 +137,11 @@
                   href="{% url 'mfa_index' %}"
                   text="{% trans "Manage 2FA" %}" />
       </c-slot>
-    </c-card>
+    </c-mvp.card>
   {% endif %}
   {% if account.sessions %}
-    <c-card title="{% trans "Sessions" %}" icon="sessions">
-      <c-text size="sm"
+    <c-mvp.card title="{% trans "Sessions" %}" icon="sessions">
+      <c-mvp.text size="sm"
               muted
               text="{% blocktrans count n=account.sessions.count %}{{ n }} active session{% plural %}{{ n }} active sessions{% endblocktrans %}" />
       <c-slot name="footer">
@@ -151,6 +151,6 @@
                   href="{% url 'usersessions_list' %}"
                   text="{% trans "Manage sessions" %}" />
       </c-slot>
-    </c-card>
+    </c-mvp.card>
   {% endif %}
 {% endblock account.cards %}

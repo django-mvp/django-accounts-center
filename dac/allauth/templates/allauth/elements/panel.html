@@ -1,6 +1,6 @@
 {% load allauth %}
 
-<c-card class="mb-4">
+<c-mvp.card class="mb-4">
   <c-slot name="title">
     {% slot title %}
     {% endslot %}
@@ -12,4 +12,4 @@
       {% for action in slots.actions %}{{ action }}{% endfor %}
     </c-slot>
   {% endif %}
-</c-card>
+</c-mvp.card>

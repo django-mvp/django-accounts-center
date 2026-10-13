@@ -6,7 +6,7 @@
   and — per easy-icons — an unregistered provider raises IconNotFound so a
   missing brand icon is caught in dev rather than shipped broken.
 {% endcomment %}
-<c-button href="{{ attrs.href }}" full title="{{ attrs.name }}">
+<c-button href="{{ attrs.href }}" block title="{{ attrs.name }}">
   {% icon attrs.provider_id renderer="svg" %}
   <span>{% blocktrans with provider=attrs.name %}Continue with {{ provider }}{% endblocktrans %}</span>
 </c-button>

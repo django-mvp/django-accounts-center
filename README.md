@@ -63,7 +63,7 @@ The core `dac` app adds the pieces that are not allauth's business: the shared
 entrance page and its branded card, and a `DAC_ICONS` easy-icons pack. The
 `AccountCenterMenu` the integrations append to is django-mvp's, re-exported
 from `dac.menus` so either import reaches the same menu. django-mvp's
-`<c-user.sidebar-menu>` picks up an "Account Center" entry and a POST logout
+`<c-mvp.user.sidebar-menu>` picks up an "Account Center" entry and a POST logout
 form once the URLs are installed.
 
 ## Scope
@@ -98,16 +98,22 @@ INSTALLED_APPS = [
     "dac",
     "dac.allauth",              # BEFORE allauth and mvp so its template overrides win
     "mvp",
+    "daisy_cotton",             # directly below mvp
     "allauth",
     "allauth.account",
     "allauth.socialaccount",    # optional
     "allauth.mfa",              # optional
     "allauth.usersessions",     # optional
     "easy_icons",
+    "crispy_forms",
+    "mvp_forms",
     "flex_menu",
     "django_cotton",
     # ...
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["daisyui"]
+CRISPY_TEMPLATE_PACK = "daisyui"
 
 SITE_ID = 1
 

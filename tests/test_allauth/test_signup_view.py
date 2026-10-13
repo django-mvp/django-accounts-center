@@ -338,7 +338,7 @@ def test_passkey_signup_page_returns_http_200(client):
 
 @pytest.mark.django_db
 def test_passkey_signup_page_uses_entrance_shell(client):
-    """signup_by_passkey.html must render within the <c-entrance> card shell."""
+    """signup_by_passkey.html must render within the <c-mvp.entrance> card shell."""
     response = client.get(get_passkey_signup_url())
     content = response.content.decode()
     # The dac entrance layout renders the centered card shell

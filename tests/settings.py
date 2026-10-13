@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "dac.allauth",
     "tests.testapp",
     "mvp",
+    "daisy_cotton",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -46,13 +47,13 @@ INSTALLED_APPS = [
     "allauth.usersessions",
     "easy_icons",
     "crispy_forms",
-    "crispy_tailwind",
+    "mvp_forms",
     "flex_menu",
     "django_cotton",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = ["tailwind"]
-CRISPY_TEMPLATE_PACK = "tailwind"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["daisyui"]
+CRISPY_TEMPLATE_PACK = "daisyui"
 
 SITE_ID = 1
 

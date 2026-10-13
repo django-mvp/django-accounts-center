@@ -1,7 +1,7 @@
 {% load allauth %}
 {% comment %}
-  Renders a whole Django form through mvp's <c-form.render> (crispy-tailwind),
+  Renders a whole Django form through mvp's <c-mvp.form.render> (django-mvp-forms),
   so allauth forms match every other form in the mvp shell. allauth's
   `unlabeled` hint is intentionally ignored — fields are always labelled.
 {% endcomment %}
-<c-form.render :form="attrs.form" />
+<c-mvp.form.render :form="attrs.form" />

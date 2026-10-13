@@ -45,18 +45,18 @@
               CSS-only single-markup would require overriding DaisyUI's
               dropdown hidden-state internals per breakpoint — too brittle.
             {% endcomment %}
-            <c-dropdown full class="w-full lg:hidden" content_class="p-2">
+            <c-mvp.dropdown full class="w-full lg:hidden" content_class="p-2">
               <c-slot name="button">
                 <c-button tabindex="0"
                           role="button"
-                          full
-                          align="between"
-                          reverse
-                          icon="chevron_down"
-                          text="{% trans "Account Center" %}" />
+                          block
+                          class="justify-between"
+                          text="{% trans "Account Center" %}">
+                  <c-icon name="chevron_down" />
+                </c-button>
               </c-slot>
               {% render_menu "AccountCenterMenu" renderer="sidebar" %}
-            </c-dropdown>
+            </c-mvp.dropdown>
             <div class="hidden lg:block card bg-base-200 p-2">{% render_menu "AccountCenterMenu" renderer="sidebar" %}</div>
           {% endblock account_menu %}
         </aside>
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <c-messages :messages="messages" dismissible />
+    <c-mvp.messages :messages="messages" dismissible />
   </c-app.main>
 {% endblock app.main %}
 

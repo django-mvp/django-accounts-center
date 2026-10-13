@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "dac",
     "dac.allauth",
     "mvp",
+    "daisy_cotton",
     "example",
     "allauth",
     "allauth.account",
@@ -46,12 +47,12 @@ INSTALLED_APPS = [
     "allauth.usersessions",
     "easy_icons",
     "crispy_forms",
+    "mvp_forms",
     "flex_menu",
     "django_cotton",
     "django_extensions",
     "django_browser_reload",
     "dj_urls_panel",
-    "crispy_tailwind",
 ]
 
 SITE_ID = 1
@@ -111,9 +112,9 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = ["tailwind"]
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["daisyui"]
 
-CRISPY_TEMPLATE_PACK = "tailwind"
+CRISPY_TEMPLATE_PACK = "daisyui"
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root

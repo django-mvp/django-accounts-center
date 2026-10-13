@@ -111,7 +111,7 @@ The core package owns it, in two files:
 - `dac/templates/dac/entrance.html` — the page an app extends. Carries the mvp
   base shell, the messages region and `{% block content %}`
 - `dac/templates/cotton/dac/entrance.html` — the `<c-dac.entrance>` component:
-  mvp's `<c-entrance>` card with the site logo above the slot
+  mvp's `<c-mvp.entrance>` card with the site logo above the slot
 
 Any installed app reaches it with a bare `{% extends "dac/entrance.html" %}`,
 without referencing a template that belongs to an integration.

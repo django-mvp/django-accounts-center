@@ -1,14 +1,14 @@
 <c-vars size="2xl" />
 {% comment %}
-  The card for anonymous-facing pages: mvp's <c-entrance> with the site logo
+  The card for anonymous-facing pages: mvp's <c-mvp.entrance> with the site logo
   above the slot.
 
-  The logo is mvp's own <c-brand.logo>, which resolves the project's asset and
+  The logo is mvp's own <c-mvp.brand.logo>, which resolves the project's asset and
   sizes it to the card. It used to be a hand-built <img> with a fixed height
   class, which only rendered because this package shipped a stylesheet of its
   own containing that class.
 
-  `size` is the width the page wants, passed straight to <c-entrance>: sm, md,
+  `size` is the width the page wants, passed straight to <c-mvp.entrance>: sm, md,
   lg, xl, 2xl, 3xl or 4xl, or "full" for a card that fills its container. It
   defaults to 2xl, the width these pages have always rendered at, so a page
   that declares nothing is unaffected.
@@ -19,8 +19,8 @@
   little wider than the page asked for, with nothing to show why.
 {% endcomment %}
 {% with scale="sm md lg xl 2xl 3xl 4xl full" %}
-  <c-entrance size="{% if size in scale.split %}{{ size }}{% else %}2xl{% endif %}">
-    <c-brand.logo max-height="md" class="mb-4" />
+  <c-mvp.entrance size="{% if size in scale.split %}{{ size }}{% else %}2xl{% endif %}">
+    <c-mvp.brand.logo max-height="md" class="mb-4" />
     {{ slot }}
-  </c-entrance>
+  </c-mvp.entrance>
 {% endwith %}

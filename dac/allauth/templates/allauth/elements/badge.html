@@ -2,7 +2,8 @@
 {% with tags=attrs.tags|default:"" %}
   <c-badge size="sm"
            title="{{ attrs.title }}"
-           variant="{% if "success" in tags %}success{% elif "warning" in tags %}warning{% elif "danger" in tags or "error" in tags %}error{% elif "primary" in tags or "current" in tags %}primary{% else %}ghost{% endif %}">
+           variant="{% if "success" in tags %}success{% elif "warning" in tags %}warning{% elif "danger" in tags or "error" in tags %}error{% elif "primary" in tags or "current" in tags %}primary{% endif %}"
+           class="{% if "success" in tags or "warning" in tags or "danger" in tags or "error" in tags or "primary" in tags or "current" in tags %}{% else %}badge-ghost{% endif %}">
     {% slot %}
     {% endslot %}
   </c-badge>

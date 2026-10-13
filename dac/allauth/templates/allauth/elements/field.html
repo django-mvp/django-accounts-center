@@ -62,10 +62,10 @@
   </div>
 {% endif %}
 {% if slots.help_text %}
-  <c-text size="xs" muted tight>
+  <c-mvp.text size="xs" muted tight>
     {% slot help_text %}
     {% endslot %}
-  </c-text>
+  </c-mvp.text>
 {% endif %}
 {% if attrs.errors %}
   <div class="text-error text-sm">{{ attrs.errors }}</div>

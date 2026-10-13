@@ -4,7 +4,7 @@
   the group can't inherit mvp's ambient `collapse` sidebar context var (set on
   in-shell manage pages), which would otherwise flip it to a horizontal row.
 {% endcomment %}
-<c-group class="my-4" :collapse="False" :row="False">
+<c-mvp.group class="my-4" :collapse="False" :row="False">
   {% slot %}
   {% endslot %}
-</c-group>
+</c-mvp.group>

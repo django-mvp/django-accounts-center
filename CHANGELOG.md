@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING: django-mvp 0.28 or later is required.** The minimum was 0.22.
+  django-mvp 0.27 moved the components it keeps under an `mvp.` prefix and
+  handed its basic ones (button, badge, alert, divider) to daisy-cotton, and
+  0.26 replaced crispy-tailwind with django-mvp-forms. This package's
+  templates now use the new names and attributes, so they no longer render
+  on an older django-mvp. What the pages show is unchanged.
+
+  **On upgrade**, follow django-mvp's own upgrade notes for 0.26 and 0.27.
+  For a project that only uses this package, that comes to three settings
+  changes:
+
+  ```python
+  INSTALLED_APPS = [
+      ...
+      "mvp",
+      "daisy_cotton",  # new, directly below "mvp"
+      ...
+      "crispy_forms",
+      "mvp_forms",  # was "crispy_tailwind"
+  ]
+
+  CRISPY_ALLOWED_TEMPLATE_PACKS = ["daisyui"]  # was ["tailwind"]
+  CRISPY_TEMPLATE_PACK = "daisyui"  # was "tailwind"
+  ```
+
+  A template of your own that still calls a django-mvp component by its old
+  name, such as `<c-card>`, `<c-text>` or `<c-user.sidebar-menu>`, needs the
+  prefix: `<c-mvp.card>`, `<c-mvp.text>`, `<c-mvp.user.sidebar-menu>`.
+  `<c-dac.entrance>` keeps its name.
+
+### Removed
+
+- The `allauth` extra no longer installs `crispy-tailwind` or declares
+  `django-crispy-forms`. django-mvp installs django-mvp-forms and
+  django-crispy-forms itself, and nothing here uses crispy-tailwind any more.
+
 ### Added
 
 - Django 6.1 is supported, and tested on every change alongside 5.2 and 6.0.

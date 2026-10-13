@@ -20,30 +20,20 @@ classifiers = [
 dependencies = [
     # Bounds are the ranges CI actually verifies (5.2 and 6.0), per Article XV.
     "django (>=5.2.17,<7.0)",
-    "django-mvp (>=0.22,<1.0)",
+    "django-mvp (>=0.28,<1.0)",
 ]
 
 [project.optional-dependencies]
 # Each integration sub-app ("dac.allauth", …) has a matching extra.
-# crispy-forms/-tailwind back mvp's <c-form.render>, which dac.allauth uses to
-# render allauth forms; mvp treats crispy as consumer-provided, so declare it
-# here rather than relying on it transitively.
 allauth = [
     # Capped at the current major: the integration is coupled to allauth's
     # element and layout template vocabulary, which a major release may change.
     "django-allauth[socialaccount,mfa] (>=65.18,<66.0)",
-    "django-crispy-forms (>=2.6,<3.0)",
-    "crispy-tailwind (>=1.0.3,<2.0)",
 ]
 
 [dependency-groups]
 dev = [
     "django-allauth[mfa,socialaccount]>=65.19.2,<66",
-    # Back mvp's <c-form.render> (used by dac.allauth's fields.html). Also declared
-    # in the `allauth` extra for consumers; here so a dev `uv sync` gets a
-    # working crispy_tailwind (tailwind_filters) rather than a partial one.
-    "django-crispy-forms>=2.7,<3",
-    "crispy-tailwind>=1.0.3,<2",
     "python-dotenv>=1.2.3,<2",
     "django-extensions>=4.1,<5",
     "beautifulsoup4>=4.14.3,<5",
@@ -174,11 +164,8 @@ DEP001 = [
     "allauth",
     "crispy_forms",
 ]
-# django-crispy-forms/crispy-tailwind back mvp's <c-form.render> and dac's allauth
-# templates purely through crispy's Django template tags and CRISPY_TEMPLATE_PACK —
-# dac's own .py files never import them. flex_menu is a transitive dep of django-mvp
-# (see DEP001 above), same reasoning applies to its direct import in menus.py.
-DEP002 = ["django-crispy-forms", "crispy-tailwind"]
+# flex_menu is a transitive dep of django-mvp (see DEP001 above); the same
+# reasoning applies to its direct import in menus.py.
 DEP003 = ["toml", "flex_menu", "pytest"]
 # dotenv is used in example/ (dev-only app), not in the published package
 DEP004 = ["dotenv"]

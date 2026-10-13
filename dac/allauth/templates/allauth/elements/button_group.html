@@ -1,13 +1,13 @@
 {% load allauth %}
 {% if attrs.vertical %}
   {% comment %} collapse pinned False so the group can't inherit mvp's ambient `collapse` sidebar context var on in-shell pages. {% endcomment %}
-  <c-group class="my-4" :collapse="False" :row="False">
+  <c-mvp.group class="my-4" :collapse="False" :row="False">
     {% slot %}
     {% endslot %}
-  </c-group>
+  </c-mvp.group>
 {% else %}
-  <c-group row wrap class="items-center my-4">
+  <c-mvp.group row wrap class="items-center my-4">
     {% slot %}
     {% endslot %}
-  </c-group>
+  </c-mvp.group>
 {% endif %}
