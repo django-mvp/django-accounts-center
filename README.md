@@ -47,7 +47,7 @@ three **layouts** and its ~22 **element** templates:
   codes, … render as a centered card (no app shell) with your site logo.
 - `allauth/layouts/manage.html` → `dac/base.html` — email, password, MFA,
   sessions and connected-accounts pages render inside the normal django-mvp
-  shell with an "Account Center" sub menu beside the content.
+  shell, with the Account Center menu in the sidebar.
 - `allauth/elements/*.html` — every `{% element %}` (button, field, form,
   panel, alert, badge, provider button, table, …) maps to DaisyUI markup.
 
@@ -161,27 +161,28 @@ FLEX_MENUS = {
 }
 
 LOGIN_URL = "account_login"
-LOGIN_REDIRECT_URL = "/accounts/"
+LOGIN_REDIRECT_URL = "/account/"
 ```
 
 ### 2. URLs
 
-Two includes at the prefix of your choosing. django-mvp's URLconf carries the
-Account Center's landing page; dac's carries the pages your installed
-integrations serve, and includes `allauth.urls` for you:
+Two includes. django-mvp's URLconf carries the Account Center's landing page
+and goes at the site root, because it places the page under `account/` itself.
+dac's carries the pages your installed integrations serve, and includes
+`allauth.urls` for you:
 
 ```python
 urlpatterns = [
-    path("accounts/", include("mvp.urls")),
-    path("accounts/", include("dac.urls")),
+    path("", include("mvp.urls")),
+    path("account/", include("dac.urls")),
     # ...
 ]
 ```
 
-That puts the landing page at `/accounts/` under the name `account-center`,
-plus all of allauth's URLs (`/accounts/login/`, `/accounts/email/`,
-`/accounts/2fa/`, …). The prefix is yours to choose — django-mvp does not fix
-it, and nothing here does either.
+That puts the landing page at `/account/` under the name `account-center`,
+plus all of allauth's URLs (`/account/login/`, `/account/email/`,
+`/account/2fa/`, …). Mounting dac's URLconf at `account/` keeps every account
+page under the one address. Its prefix is still yours to choose.
 
 ### 3. Migrate
 

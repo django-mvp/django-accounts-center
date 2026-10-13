@@ -12,8 +12,8 @@ urlpatterns = [
     ),
     # The landing page is django-mvp's; dac.urls adds the installed
     # integrations' pages at the same prefix.
-    path("account-center/", include("mvp.urls")),
-    path("account-center/", include("dac.urls")),
+    path("", include("mvp.urls")),
+    path("account/", include("dac.urls")),
     path(
         "profile/<pk>/",
         UpdateView.as_view(

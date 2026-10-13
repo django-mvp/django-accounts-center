@@ -22,8 +22,10 @@ the package name and should not spread into new code.
 The area itself is django-mvp's: it ships the landing page, the layout, the
 menu and the URLconf, and this package fills them in.
 
-- `mvp/urls.py` — the landing page, mounted by the project at its own prefix
-- `dac/urls.py` — the installed integrations' pages, mounted at the same prefix
+- `mvp/urls.py` — the landing page, mounted by the project at the site root
+  and served under `account/`
+- `dac/urls.py` — the installed integrations' pages, mounted at `account/` to
+  sit beside it
 
 **Avoid:** "accounts center", "user center", "profile area".
 
@@ -120,7 +122,7 @@ without referencing a template that belongs to an integration.
 
 The layout for pages shown to signed-in users — email, password, MFA, sessions,
 connected accounts. Renders inside the django-mvp shell via `dac/base.html`,
-with the Account Center sub menu beside the content.
+with the Account Center menu in the sidebar.
 
 Today it exists only as an allauth layout override, at
 `dac/allauth/templates/allauth/layouts/manage.html`, over the core

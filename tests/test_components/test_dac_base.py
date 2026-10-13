@@ -16,6 +16,7 @@ contract, not the component internals (those belong to django-mvp).
 import pathlib
 
 import pytest
+from bs4 import BeautifulSoup
 from django.urls import reverse
 
 # Bare-minimum child template: extends base, loads i18n, no block overrides.
@@ -30,15 +31,26 @@ _BASE = '{% extends "dac/base.html" %}{% load i18n %}'
 def _account_nav(soup):
     """Every element django-mvp's account layout gives the navigation's name.
 
-    The layout draws the menu at more than one site so it is reachable at every
-    width, and how many is its own business, so these tests read all of them
-    together rather than counting or picking one.
+    Where the layout draws the menu, and at how many sites, is its own
+    business, so these tests read all of them together rather than counting or
+    picking one.
     """
     return soup.find_all(attrs={"aria-label": "Account navigation"})
 
 
 def _account_nav_links(soup):
     return [a.get("href") or "" for nav in _account_nav(soup) for a in nav.find_all("a")]
+
+
+@pytest.fixture
+def management_page_soup(authenticated_client):
+    """A page served through this template from the Account Center's own URLs.
+
+    django-mvp draws the area's menu on a page the menu has an entry for, so
+    the navigation is read from a real page rather than a rendered string.
+    """
+    response = authenticated_client.get(reverse("account_email"))
+    return BeautifulSoup(response.content, "html.parser")
 
 
 class TestDacBaseBlockContract:
@@ -48,27 +60,23 @@ class TestDacBaseBlockContract:
         soup = cotton_render_string_soup(_BASE)
         assert soup.find("aside", class_="mvp-sidebar") is not None
 
-    def test_account_navigation_present(self, cotton_render_string_soup):
-        """A page extending this template arrives inside the Account Center,
-        with the area's navigation beside it."""
-        soup = cotton_render_string_soup(_BASE)
-        assert _account_nav(soup) != []
+    def test_account_navigation_present(self, management_page_soup):
+        """A page served through this template arrives inside the Account
+        Center, with the area's navigation on it."""
+        assert _account_nav(management_page_soup) != []
 
-    def test_account_menu_contains_overview_link(self, cotton_render_string_soup):
+    def test_account_menu_contains_overview_link(self, management_page_soup):
         """The menu links to the Account Center landing page."""
-        soup = cotton_render_string_soup(_BASE)
-        assert any("/account-center/" in href for href in _account_nav_links(soup))
+        assert any(reverse("account-center") == href for href in _account_nav_links(management_page_soup))
 
-    def test_account_menu_has_group_heading(self, cotton_render_string_soup):
+    def test_account_menu_has_group_heading(self, management_page_soup):
         """The entries this package contributes are grouped under their own
         heading, which is what the group it appends carries."""
-        soup = cotton_render_string_soup(_BASE)
-        assert any("Email & Authentication" in nav.get_text() for nav in _account_nav(soup))
+        assert any("Email & Authentication" in nav.get_text() for nav in _account_nav(management_page_soup))
 
-    def test_account_menu_contains_allauth_links(self, cotton_render_string_soup):
+    def test_account_menu_contains_allauth_links(self, management_page_soup):
         """Email and password management items resolve to allauth URLs."""
-        soup = cotton_render_string_soup(_BASE)
-        hrefs = _account_nav_links(soup)
+        hrefs = _account_nav_links(management_page_soup)
         assert any("email" in href for href in hrefs)
         assert any("password" in href for href in hrefs)
 
@@ -103,7 +111,6 @@ class TestDacBaseConsistency:
         for template in (template_a, template_b):
             soup = cotton_render_string_soup(template)
             assert soup.find("aside", class_="mvp-sidebar") is not None
-            assert _account_nav(soup) != []
 
 
 class TestDacBaseStructure:
@@ -113,7 +120,7 @@ class TestDacBaseStructure:
             pathlib.Path(__file__).resolve().parent.parent.parent / "dac" / "templates" / "dac" / "base.html"
         )
         source = template_path.read_text(encoding="utf-8")
-        for block_name in ["head_title", "extra_head", "extra_body", "content"]:
+        for block_name in ["head_title", "extra_head", "extra_body"]:
             assert f"{{% block {block_name} %}}" in source, f"Block '{block_name}' not found in dac/base.html"
 
     def test_manage_layout_extends_dac_base(self):

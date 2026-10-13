@@ -1,16 +1,17 @@
 """The URLs this package's integrations serve.
 
 The Account Center's own landing page is not here. django-mvp ships it as
-``mvp.urls``, and a project mounts that itself at whatever prefix it wants —
-including it from here would decide that address on the project's behalf, and
+``mvp.urls``, and a project mounts that itself — including it from here would
 register a second view under the ``account-center`` name for any project that
 had already mounted it.
 
-A project therefore mounts both, at the same prefix::
+django-mvp serves the landing page under ``account/``, so a project mounts its
+URLconf at the site root and this one at ``account/`` to keep the pages
+together::
 
     urlpatterns = [
-        path("accounts/", include("mvp.urls")),
-        path("accounts/", include("dac.urls")),
+        path("", include("mvp.urls")),
+        path("account/", include("dac.urls")),
     ]
 """
 

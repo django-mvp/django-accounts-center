@@ -136,7 +136,7 @@ STORAGES = {
 
 # ======= Allauth Settings =======
 LOGIN_URL = "account_login"
-LOGIN_REDIRECT_URL = "/account-center/"
+LOGIN_REDIRECT_URL = "/account/"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

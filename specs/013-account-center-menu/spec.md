@@ -82,8 +82,8 @@ rendered menus.
 A developer writes a management view in their own integration and wants it to look like every
 other Account Center page:
 
-- the sub menu beside it
-- the breadcrumbs above it
+- the Account Center menu in the sidebar
+- the breadcrumbs above the content
 - its own content in the middle
 
 The shared management page is owned by the core package and is meant to carry exactly this, but
@@ -96,13 +96,13 @@ that. It is P2 rather than P1 because the shared page already exists — this pr
 a contract rather than building one.
 
 **Independent Test**: Serve a management view from an app that does not depend on `dac.allauth`
-through the shared management page and assert it renders with the sub menu, the breadcrumbs and
+through the shared management page and assert it renders with the Account Center menu, the breadcrumbs and
 its own content.
 
 **Acceptance Scenarios**:
 
 1. **Given** an integration other than `dac.allauth`, **When** its management view renders
-   through the shared management page, **Then** the page carries the sub menu, the breadcrumbs
+   through the shared management page, **Then** the page carries the Account Center menu, the breadcrumbs
    and the view's own content.
 2. **Given** that integration, **When** it is added to a project, **Then** it reaches the shared
    management page without any change to the core package.
@@ -168,7 +168,7 @@ description of the code match what the package does.
 - **FR-007**: The entries `dac.allauth` contributes today MUST continue to appear exactly as they
   do now for a person to whom they apply. *(US-2)*
 - **FR-008**: An integration other than `dac.allauth` MUST be able to serve a management view
-  through the shared management page, carrying the sub menu, the breadcrumbs and its own content,
+  through the shared management page, carrying the Account Center menu, the breadcrumbs and its own content,
   with no change to the core package. *(US-3)*
 - **FR-009**: ADR 0002 MUST cite roadmap item R2, record the decision as implemented for menu
   entries, and describe the code as it then stands. *(US-4)*

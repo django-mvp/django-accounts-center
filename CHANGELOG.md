@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   handed its basic ones (button, badge, alert, divider) to daisy-cotton, and
   0.26 replaced crispy-tailwind with django-mvp-forms. This package's
   templates now use the new names and attributes, so they no longer render
-  on an older django-mvp. What the pages show is unchanged.
+  on an older django-mvp.
 
   **On upgrade**, follow django-mvp's own upgrade notes for 0.26 and 0.27.
   For a project that only uses this package, that comes to three settings
@@ -39,8 +39,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   prefix: `<c-mvp.card>`, `<c-mvp.text>`, `<c-mvp.user.sidebar-menu>`.
   `<c-dac.entrance>` keeps its name.
 
+- **The Account Center menu is in the sidebar on management pages.** The
+  email, password, two-factor, sessions and connected-accounts pages now use
+  django-mvp's own Account Center layout, as the landing page does. The menu
+  that sat beside the content, a card on a wide screen and a dropdown on a
+  narrow one, is gone. django-mvp has drawn the menu in the sidebar since
+  0.25, so keeping the old copy would have shown it twice.
+
+- **BREAKING: django-mvp's URLconf is mounted at the site root.** It serves
+  the landing page under `account/` itself. Mount this package's URLconf at
+  `account/` to keep its pages beside it:
+
+  ```python
+  urlpatterns = [
+      path("", include("mvp.urls")),
+      path("account/", include("dac.urls")),
+  ]
+  ```
+
+  A project that keeps both at a prefix of its own, such as `accounts/`,
+  finds the landing page at `/accounts/account/`. URL names are unchanged.
+
 ### Removed
 
+- The `account_menu` block in `dac/base.html`. It wrapped the menu beside the
+  content, which the template no longer draws.
 - The `allauth` extra no longer installs `crispy-tailwind` or declares
   `django-crispy-forms`. django-mvp installs django-mvp-forms and
   django-crispy-forms itself, and nothing here uses crispy-tailwind any more.
